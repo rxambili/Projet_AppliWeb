@@ -1,4 +1,3 @@
-package servlet;
 
 import java.io.IOException;
 import java.util.Calendar;
@@ -93,7 +92,7 @@ public class Serv extends HttpServlet {
 			int mois = cal.get(Calendar.MONTH);
 			int jour = cal.get(Calendar.DAY_OF_MONTH);
 			String contenu = request.getParameter("contenu");
-			f.ajoutCommentaire(utilisateur, jour, mois, an, contenu);
+			f.ajoutMessage(utilisateur, jour, mois, an, contenu);
 			request.getRequestDispatcher("topic.jsp").forward(request, response);
 	}
 
