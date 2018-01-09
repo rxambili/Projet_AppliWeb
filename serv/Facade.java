@@ -6,6 +6,7 @@ import javax.ejb.Singleton;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import java.util.Date;
 import java.util.List;
 
 
@@ -16,11 +17,13 @@ public class Facade {
 
     public Facade(){}
 
-    public void ajoutUtilisateur(){}
+    public void ajoutUtilisateur(String pseudo, String adresseMail){}
 
-    public void SupprimerUtilisateur(){}
+    // A voir quel signature est la plus pratique selon la BDD (potentiellement les deux selon les cas)
+    public void SupprimerUtilisateur(String pseudo){}
+    public void SupprimerUtilisateur(int identifier){}
 
-    public Utilisateur RechercherUtilisateur(){}
+    public Utilisateur RechercherUtilisateur(String pseudo){}
 
     /**
      * Liste les topics visibles
@@ -29,14 +32,18 @@ public class Facade {
 
     public void ajoutTopic(String titre){}
 
-    public void supprimerTopic(){}
+    public void supprimerTopic(int identifer){}
 
     /**
      * Liste les message d'un topic donné
      */
     public List<Message> ListerTopicMessages(){}
 
-    public void ajoutMessage(String utilisateur, int jour, int mois, int an, String contenu) {}
+    // A voir quel signature est la plus pratique selon la BDD (potentiellement les deux selon les cas)
+    public void ajoutMessage(String pseudo, int jour, int mois, int an, String contenu) {}
+    public void ajoutMessage(int Identifier, Date date, String contenu) {}
 
-    public void supprimerMessage() {}
+    // A voir quel signature est la plus pratique selon la BDD (potentiellement les deux selon les cas)
+    public void supprimerMessage(int identifier) {}
+    public void supprimerMessage(int topicIdentifier, int index) {}
 }
