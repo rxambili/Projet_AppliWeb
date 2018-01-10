@@ -11,12 +11,18 @@
 	</head>
 	
 	<body>
+		<form method="get" action="Serv">
 		<p><input type="submit" value="Déconnexion"></p>
 		<p><input type="hidden" name="op" value="bienvenue"></p>
+		</form>
+		<form method="get" action="Serv">
 		<p><input type="submit" value="< page Accueil"></p>
 		<p><input type="hidden" name="op" value="accueil"></p>
+		</form>
+		<form method="get" action="Serv">
 		<p><input type="submit" value="Mon compte"></p>
-		<p><input type="hidden" name="op" value="moncompte"></p><br>
+		<p><input type="hidden" name="op" value="moncompte"></p>
+		</form><br>
 		<b>TOPIC : </b><%= t.getTitre() %><br>
 		<%
 		Collection<Message> messages = t.getMessages();
