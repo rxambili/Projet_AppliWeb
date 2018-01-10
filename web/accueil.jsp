@@ -27,9 +27,5 @@
 			<%
 			}
 		}%>
-		<form method="get" action="Serv">
-		<p><input type="submit" value="Créer un topic"></p>
-		<p><input type="hidden" name="op" value="creationtopic"></p>
-		</form>
 	</body>
 </html>

@@ -42,4 +42,6 @@ public class Topic {
 	public int getNbMessages() {
 		return messages.size();
 	}
+
+	public void ajoutMessage(String utilisateur, int jour, int mois, int an, String contenu){}
 }
