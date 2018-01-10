@@ -61,8 +61,17 @@ public class Facade {
     /**
      * Liste les topics visibles
      */
-    public List<Topic> ListerTopics(){return null;}
-    public Topic getTopic(int topicId){return null;}
+    public List<Topic> ListerTopics(){return em.createQuery("select t from Topic t",
+            Topic.class).getResultList();}
+    public Topic getTopic(int topicId){
+        TypedQuery<Topic> req = em.createQuery("select t from Topic t where t.id = :identifier",
+                Topic.class).setParameter("identifier", topicId).setMaxResults(1);
+        List<Topic> results = req.getResultList();
+        if (results.size() > 0) {
+            return results.get(0);
+        }
+        return null;
+    }
     public void ajoutTopic(String titre){
         ajoutTopic(titre, null);
     }
@@ -72,7 +81,7 @@ public class Facade {
     }
 
     public void supprimerTopic(int identifer){
-        this.em.createNativeQuery("remove * from topics where identifier = '"+identifer+"'");
+        this.em.createNativeQuery("remove * from Topic t where t.id = :identifier").setParameter("identifier", identifer);
     }
 
     /**
@@ -81,10 +90,20 @@ public class Facade {
     public List<Message> ListerTopicMessages(){return null;}
 
     // A voir quel signature est la plus pratique selon la BDD (potentiellement les deux selon les cas)
-    public void ajoutMessage(int topicId, String pseudo, int jour, int mois, int an, String contenu) {}
-    public void ajoutMessage(int topicId, int UtilisateurId, Date date, String contenu) {}
+    public void ajoutMessage(int topicId, String pseudoAuteur, int jour, int mois, int an, String contenu) {
+        Topic t = getTopic(topicId);
+        Utilisateur auteur = rechercherUtilisateur(pseudoAuteur);
+        Message m = new Message(auteur, jour, mois, an, contenu);
+        em.persist(m);
+    }
 
     // A voir quel signature est la plus pratique selon la BDD (potentiellement les deux selon les cas)
-    public void supprimerMessage(int identifier) {}
-    public void supprimerMessage(int topicIdentifier, int index) {}
+    public void supprimerMessage(int identifier) {
+        this.em.createNativeQuery("remove * from Message m where m.id = :identifier").setParameter("identifier", identifier);
+    }
+    public void supprimerMessage(int topicIdentifier, int numero) {
+        this.em.createNativeQuery("remove * from Message m where m.topic.id = :topicId and m.numero = :num")
+                .setParameter("topicId", topicIdentifier)
+                .setParameter("num", numero);
+    }
 }

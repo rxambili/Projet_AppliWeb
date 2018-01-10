@@ -33,7 +33,7 @@
 		List<Message> messages = t.getMessages();
 		if (messages != null) {
 			for (Message m : messages) {%>
-			● <i><%= m.getAuteur() + " ()" + m.getJour() + "/" + m.getMois() + "/" + m.getAnnee() + ") :" %></i>
+			● <i><%= m.getAuteur() + " ()" + m.getJour() + "/" + m.getMois() + "/" + m.getAn() + ") :" %></i>
 			<%= m.getContenu() %><br>
 			<%
 			}

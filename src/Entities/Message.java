@@ -40,7 +40,7 @@ public class Message {
 	public int getJour() {
 		return this.jour;
 	}
-	public int mgetMois() {
+	public int getMois() {
 		return this.mois;
 	}
 	public int getAn() {
@@ -70,5 +70,4 @@ public class Message {
 	public void setContenu(String contenu) {
 		this.contenu = contenu;
 	}
-
 }
