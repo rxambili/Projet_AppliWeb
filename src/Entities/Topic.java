@@ -1,17 +1,26 @@
 package Entities;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import javax.persistence.*;
 
+@Entity
 public class Topic {
+	@Id
+	@GeneratedValue(strategy= GenerationType.IDENTITY)
+	int id;
 	
 	private String titre;
+	@ManyToOne(fetch=FetchType.EAGER)
 	private Utilisateur createur;
-	private HashMap<Integer, Message> messages; // liste des messages avec leurs numeros
+	@OneToMany(mappedBy = "topic", fetch=FetchType.EAGER)
+	private List<Message> messages;
 	
 	public Topic(String titre, Utilisateur createur) {
 		this.titre = titre;
 		this.createur = createur;
-		messages = new HashMap<Integer, Message>();
+		messages = new ArrayList<>();
 	}
 	
 	public String getTitre() {
@@ -20,7 +29,7 @@ public class Topic {
 	public Utilisateur getCreateur() {
 		return this.createur;
 	}
-	public HashMap<Integer, Message> getMessages() {
+	public List<Message> getMessages() {
 		return this.messages;
 	}
 	
@@ -32,7 +41,7 @@ public class Topic {
 	}
 	public void ajoutMessage(Message message) {
 		int n = messages.size();
-		messages.put(n+1, message);
+		messages.add(message);
 	}
 	
 	public Message getMessage(int numero) {

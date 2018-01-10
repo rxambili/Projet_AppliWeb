@@ -1,12 +1,27 @@
 package Entities;
 
+import javax.persistence.*;
+import java.util.List;
+
+@Entity
 public class Utilisateur {
+	@Id
+	@GeneratedValue(strategy= GenerationType.IDENTITY)
+	int id;
 	
 	private String nom;
 	private String prenom;
 	private String pseudo;
 	private String mdp;
-	
+
+	@OneToMany(mappedBy="auteur")
+	private List<Message> messages;
+    @OneToMany(mappedBy="createur")
+    private List<Topic> topics;
+
+
+	public Utilisateur(){}
+
 	public Utilisateur(String nom, String prenom, String pseudo, String mdp) {
 		this.nom = nom;
 		this.prenom = prenom;

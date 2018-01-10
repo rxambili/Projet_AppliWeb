@@ -1,13 +1,22 @@
 package Entities;
+import javax.persistence.*;
 
+@Entity
 public class Message {
-	
+	@Id
+	@GeneratedValue(strategy= GenerationType.IDENTITY)
+	int id;
+
 	private int numero; // position du message dans le topic
+	@ManyToOne(fetch=FetchType.EAGER)
 	private Utilisateur auteur;
 	private int jour;
 	private int mois;
 	private int an;
 	private String contenu;
+
+	@ManyToOne()
+	private Topic topic;
 	
 	public Message(Utilisateur auteur, int jour, int mois, int an, String contenu) {
 		this.auteur = auteur;
@@ -16,7 +25,10 @@ public class Message {
 		this.an = an;
 		this.contenu = contenu;
 	}
-	
+
+	public Message() {
+	}
+
 	public int getNumero() {
 		return this.numero;
 	}

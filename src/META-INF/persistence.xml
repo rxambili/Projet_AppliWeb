@@ -7,10 +7,17 @@
         <provider>org.hibernate.ejb.HibernatePersistence</provider>
         
         <jta-data-source>java:jboss/datasources/ExampleDS</jta-data-source>
-        
-        <class>Entities.Topic</class>
+
+        <class>Entities.Achivement</class>
+        <class>Entities.FichierAdditionnel</class>
+        <class>Entities.Invitation</class>
+        <class>Entities.Label</class>
+        <class>Entities.LogPayement</class>
         <class>Entities.Message</class>
-        
+        <class>Entities.Permission</class>
+        <class>Entities.Topic</class>
+        <class>Entities.Utilisateur</class>
+
         <properties>
             <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect" />
             <property name="hibernate.hbm2ddl.auto" value="create-drop" />
