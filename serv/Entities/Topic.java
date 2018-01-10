@@ -8,6 +8,12 @@ public class Topic {
 	private Utilisateur createur;
 	private HashMap<Integer, Message> messages; // liste des messages avec leurs numeros
 	
+	public Topic(String titre, Utilisateur createur) {
+		this.titre = titre;
+		this.createur = createur;
+		messages = new HashMap<Integer, Message>();
+	}
+	
 	public String getTitre() {
 		return this.titre;
 	}

@@ -1,3 +1,4 @@
+package servlet;
 
 import java.io.IOException;
 import java.util.Calendar;
@@ -9,6 +10,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import facade.Facade;
 
 /**
  * Servlet implementation class Serv
@@ -60,6 +63,9 @@ public class Serv extends HttpServlet {
 		case "moncompte" :
 			request.getRequestDispatcher("mon_compte.jsp").forward(request, response);
 			break;
+		case "creationtopic" :
+			request.getRequestDispatcher("creation_topic.html").forward(request, response);
+			break;
 		case "Vinscription" :
 			String nom = request.getParameter("nom");
 			String prenom = request.getParameter("prenom");
@@ -69,11 +75,11 @@ public class Serv extends HttpServlet {
 			request.getRequestDispatcher("bienvenue.html").forward(request, response);
 			break;
 		case "Vconnexion" :
-			String pseudo = request.getParameter("pseudo");
-			String mdp = request.getParameter("mdp");
-			if (mdp == f.getUtilisateur(pseudo).getMotdepasse()) {
+			String pseudo2 = request.getParameter("pseudo");
+			String mdp2 = request.getParameter("mdp");
+			if (mdp2 == f.rechercherUtilisateur(pseudo2).getMotdepasse()) {
 				connected = true;
-				utilisateur = pseudo;
+				utilisateur = pseudo2;
 				request.getRequestDispatcher("accueil.jsp").forward(request, response);
 			} else {
 				request.getRequestDispatcher("bienvenue.html").forward(request, response);
@@ -85,15 +91,16 @@ public class Serv extends HttpServlet {
 			request.getRequestDispatcher("accueil.jsp").forward(request, response);
 			break;
 		case "Vcommentaire" :
-			Date date;
+			Date date = null;
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(date);
 			int an = cal.get(Calendar.YEAR);
 			int mois = cal.get(Calendar.MONTH);
 			int jour = cal.get(Calendar.DAY_OF_MONTH);
 			String contenu = request.getParameter("contenu");
-			f.ajoutMessage(utilisateur, jour, mois, an, contenu);
+			f.getTopic(...).ajoutCommentaire(utilisateur, jour, mois + 1, an, contenu);
 			request.getRequestDispatcher("topic.jsp").forward(request, response);
 	}
 
+}
 }

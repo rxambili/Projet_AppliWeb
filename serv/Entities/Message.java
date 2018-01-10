@@ -9,6 +9,14 @@ public class Message {
 	private int an;
 	private String contenu;
 	
+	public Message(Utilisateur auteur, int jour, int mois, int an, String contenu) {
+		this.auteur = auteur;
+		this.jour = jour;
+		this.mois = mois;
+		this.an = an;
+		this.contenu = contenu;
+	}
+	
 	public int getNumero() {
 		return this.numero;
 	}

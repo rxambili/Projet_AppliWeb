@@ -1,13 +1,16 @@
-import Entities.Message;
-import Entities.Topic;
-import Entities.Utilisateur;
+package facade;
+
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
 
 import javax.ejb.Singleton;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
-import java.util.Date;
-import java.util.List;
+
+import Entities.Message;
+import Entities.Topic;
+import Entities.Utilisateur;
 
 
 @Singleton
@@ -15,20 +18,26 @@ public class Facade {
     @PersistenceContext
     EntityManager em;
 
+    
     public Facade(){}
 
-    public void ajoutUtilisateur(String pseudo, String adresseMail){}
+    public void ajoutUtilisateur(String nom, String prenom, String pseudo, String mdp) {
+    	Utilisateur u = new Utilisateur(nom, prenom, pseudo, mdp);
+    	this.em.persist(u);
+    }
 
     // A voir quel signature est la plus pratique selon la BDD (potentiellement les deux selon les cas)
-    public void SupprimerUtilisateur(String pseudo){}
+    public void SupprimerUtilisateur(String pseudo) {
+    	this.em.createNativeQuery("remove * from utilisateurs where pseudo = 'pseudo'");
+    }
     public void SupprimerUtilisateur(int identifier){}
 
-    public Utilisateur RechercherUtilisateur(String pseudo){}
+    public Utilisateur rechercherUtilisateur(String pseudo){ return null; }
 
     /**
      * Liste les topics visibles
      */
-    public List<Topic> ListerTopics(){}
+    public List<Topic> ListerTopics(){return null;}
 
     public void ajoutTopic(String titre){}
 
@@ -37,7 +46,7 @@ public class Facade {
     /**
      * Liste les message d'un topic donné
      */
-    public List<Message> ListerTopicMessages(){}
+    public List<Message> ListerTopicMessages(){return null;}
 
     // A voir quel signature est la plus pratique selon la BDD (potentiellement les deux selon les cas)
     public void ajoutMessage(String pseudo, int jour, int mois, int an, String contenu) {}

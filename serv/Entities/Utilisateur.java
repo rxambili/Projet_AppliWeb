@@ -7,6 +7,13 @@ public class Utilisateur {
 	private String pseudo;
 	private String mdp;
 	
+	public Utilisateur(String nom, String prenom, String pseudo, String mdp) {
+		this.nom = nom;
+		this.prenom = prenom;
+		this.pseudo = pseudo;
+		this.mdp = mdp;
+	}
+	
 	public String getNom() {
 		return this.nom;
 	}
