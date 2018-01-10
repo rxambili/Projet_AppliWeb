@@ -12,6 +12,7 @@
   </head>
   <body>
   $END$
-  <a href = "accueil.html">accueil</a>
+  <meta http-equiv="refresh" content="1; accueil.html">
+  <%-- ceci est une redirection --%>
   </body>
 </html>
