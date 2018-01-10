@@ -6,6 +6,8 @@ import java.util.List;
 import javax.ejb.Singleton;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import javax.rmi.CORBA.Util;
 
 import Entities.Message;
 import Entities.Topic;
@@ -18,29 +20,60 @@ public class Facade {
     EntityManager em;
 
 
-    public Facade(){}
+    public Facade(){
+        //Utilisateur defautAdmin = new Utilisateur("admin", "admin", "admin", "admin"); // TODO supprimer en prod
+        //this.em.persist(defautAdmin);
+    }
 
     public void ajoutUtilisateur(String nom, String prenom, String pseudo, String mdp) {
+        ajoutUtilisateurAndReturn(nom, prenom, pseudo, mdp);
+    }
+    public Utilisateur ajoutUtilisateurAndReturn(String nom, String prenom, String pseudo, String mdp) {
         Utilisateur u = new Utilisateur(nom, prenom, pseudo, mdp);
         this.em.persist(u);
+        return u;
     }
 
     // A voir quel signature est la plus pratique selon la BDD (potentiellement les deux selon les cas)
     public void SupprimerUtilisateur(String pseudo) {
-        this.em.createNativeQuery("remove * from utilisateurs where pseudo = 'pseudo'");
+        this.em.createNativeQuery("remove * from Utilisateur u where u.pseudo = :pseudo").setParameter("pseudo", pseudo);
     }
-    public void SupprimerUtilisateur(int identifier){}
+    public void SupprimerUtilisateur(int identifier){
+        this.em.createNativeQuery("remove * from Utilisateur u where u.id = :id").setParameter("id", identifier);
+    }
 
-    public Utilisateur rechercherUtilisateur(String pseudo){ return null; }
+    public Utilisateur rechercherUtilisateur(String pseudo){
+        TypedQuery<Utilisateur> req = em.createQuery("select u from Utilisateur u where u.pseudo = :pseudo",
+                Utilisateur.class).setParameter("pseudo", pseudo).setMaxResults(1);
+        List<Utilisateur> results = req.getResultList();
+        if (results.size() > 0) {
+            return results.get(0);
+        }
+        return null;
+    }
+
+    public List<Utilisateur> listerUtilisateurs(){
+        TypedQuery<Utilisateur> req = em.createQuery("select u from Utilisateur u",
+                Utilisateur.class);
+        return req.getResultList();
+    }
 
     /**
      * Liste les topics visibles
      */
     public List<Topic> ListerTopics(){return null;}
-    public Topic getCurrentTopic(){return null;}
-    public void ajoutTopic(String titre){}
+    public Topic getTopic(int topicId){return null;}
+    public void ajoutTopic(String titre){
+        ajoutTopic(titre, null);
+    }
+    public void ajoutTopic(String titre, Utilisateur proprietaire){
+        Topic t = new Topic(titre, null);
+        em.persist(t);
+    }
 
-    public void supprimerTopic(int identifer){}
+    public void supprimerTopic(int identifer){
+        this.em.createNativeQuery("remove * from topics where identifier = '"+identifer+"'");
+    }
 
     /**
      * Liste les message d'un topic donné

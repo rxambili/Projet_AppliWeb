@@ -23,7 +23,12 @@
 		<%
 		if (topics != null) {
 			for (Topic t : topics) {%>
-			● <a href = "topic.jsp"><%= t.titre %></a><br>
+			● <%--<a href = "Serv?op=afficherTopic"><%= t.titre %></a><br>--%>
+			<form method="get" action="Serv">
+				<p><input type="hidden" name="op" value="afficherTopic"></p><br>
+				<p><input type="hidden" name="op" value="<%=t.getId()%>"></p><br>
+				<p><input type="submit" value="<%= t.getTitre()%>"></p>
+			</form>
 			<%
 			}
 		}%>

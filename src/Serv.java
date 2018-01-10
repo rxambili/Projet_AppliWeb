@@ -1,5 +1,8 @@
 
 
+import Entities.Topic;
+import Entities.Utilisateur;
+
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
@@ -66,23 +69,43 @@ public class Serv extends HttpServlet {
             case "creationtopic" :
                 request.getRequestDispatcher("creation_topic.html").forward(request, response);
                 break;
+            case "afficherTopic" :
+                int topicId = Integer.parseInt(request.getParameter("topicId"));
+                Topic t = f.getTopic(topicId);
+
+                request.getRequestDispatcher("topic.jsp").forward(request, response);
+                break;
             case "Vinscription" :
                 String nom = request.getParameter("nom");
                 String prenom = request.getParameter("prenom");
                 String pseudo = request.getParameter("pseudo");
                 String mdp = request.getParameter("mdp");
-                f.ajoutUtilisateur(nom, prenom, pseudo, mdp);
-                request.getRequestDispatcher("bienvenue.html").forward(request, response);
+                Utilisateur u_cree = f.ajoutUtilisateurAndReturn(nom, prenom, pseudo, mdp);
+                request.setAttribute("nom", u_cree.getNom());
+                request.setAttribute("prenom", u_cree.getPrenom());
+                request.setAttribute("pseudo", u_cree.getPseudo());
+                request.setAttribute("mdp", u_cree.getMdp());
+                request.getRequestDispatcher("confirmationInscription.jsp").forward(request, response);
                 break;
             case "Vconnexion" :
                 String pseudo2 = request.getParameter("pseudo");
                 String mdp2 = request.getParameter("mdp");
-                if (mdp2 == f.rechercherUtilisateur(pseudo2).getMdp()) {
+                Utilisateur u = f.rechercherUtilisateur(pseudo2);
+                if (u==null) {
+                    // le compte n'existe pas
+                    String s = "";
+                    for (Utilisateur a_user : f.listerUtilisateurs()){
+                        s = s + a_user.getPseudo() + "\n"; // POUR LE DEGUB UNIQUEMENT TODO supprimer en prod
+                    }
+                    DisplayErrorPage("Le compte n'existe pas\nliste des compte :\n"+s, "bienvenue.html", request, response);
+                } else if (mdp2.equals(u.getMdp())) {
+                    // connexion OK
                     connected = true;
-                    utilisateur = pseudo2;
                     request.getRequestDispatcher("accueil.jsp").forward(request, response);
                 } else {
-                    request.getRequestDispatcher("bienvenue.html").forward(request, response);
+                    // Mauvais mot de passe
+                    // affichage du vrai mdp : POUR LE DEGUB UNIQUEMENT TODO supprimer en prod
+                    DisplayErrorPage("mauvais mot de passe, bon mot de passe :'"+u.getMdp()+"'", "connexion.html", request, response);
                 }
                 break;
             case "Vcreationtopic" :
@@ -98,9 +121,15 @@ public class Serv extends HttpServlet {
                 int mois = cal.get(Calendar.MONTH);
                 int jour = cal.get(Calendar.DAY_OF_MONTH);
                 String contenu = request.getParameter("contenu");
-                f.getCurrentTopic().ajoutMessage(utilisateur, jour, mois + 1, an, contenu);
-                request.getRequestDispatcher("topic.jsp").forward(request, response);
+                //TODO recuperer l'id du topic actuel dans les attribut de la requete
+                //f.getTopic().ajoutMessage(utilisateur, jour, mois + 1, an, contenu);
+                //request.getRequestDispatcher("topic.jsp").forward(request, response);
         }
 
+    }
+    protected void DisplayErrorPage(String message, String redirection, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setAttribute("ErrorMessage", message);
+        request.setAttribute("Redirection", redirection);
+        request.getRequestDispatcher("errorPage.jsp").forward(request, response);
     }
 }

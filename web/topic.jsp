@@ -1,10 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ page import="" %>
+<%@ page import="Entities.Topic" %>
+<%@ page import="Entities.Message" %>
+<%@ page import="java.util.Collection" %>
+<%@ page import="java.util.List" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 	<%
-	Topic t = ...%>
+	Topic t = (Topic)request.getAttribute("topic");
+	%>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title>Topic : <%= t.getTitre() %></title>
@@ -25,7 +30,7 @@
 		</form><br>
 		<b>TOPIC : </b><%= t.getTitre() %><br>
 		<%
-		Collection<Message> messages = t.getMessages();
+		List<Message> messages = t.getMessages();
 		if (messages != null) {
 			for (Message m : messages) {%>
 			● <i><%= m.getAuteur() + " ()" + m.getJour() + "/" + m.getMois() + "/" + m.getAnnee() + ") :" %></i>

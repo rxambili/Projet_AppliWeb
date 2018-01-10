@@ -7,6 +7,7 @@ import javax.persistence.*;
 
 @Entity
 public class Topic {
+
 	@Id
 	@GeneratedValue(strategy= GenerationType.IDENTITY)
 	int id;
@@ -43,7 +44,14 @@ public class Topic {
 		int n = messages.size();
 		messages.add(message);
 	}
-	
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public void setMessages(List<Message> messages) {
+		this.messages = messages;
+	}
 	public Message getMessage(int numero) {
 		return messages.get(numero);
 	}
@@ -53,4 +61,8 @@ public class Topic {
 	}
 
 	public void ajoutMessage(String utilisateur, int jour, int mois, int an, String contenu){}
+
+    public int getId() {
+        return id;
+    }
 }

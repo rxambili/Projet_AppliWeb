@@ -33,7 +33,7 @@ public class Message {
 		return this.numero;
 	}
 	
-	public Utilisateur getUtilisateur() {
+	public Utilisateur getAuteur() {
 		return this.auteur;
 	}
 	
@@ -70,4 +70,5 @@ public class Message {
 	public void setContenu(String contenu) {
 		this.contenu = contenu;
 	}
+
 }
