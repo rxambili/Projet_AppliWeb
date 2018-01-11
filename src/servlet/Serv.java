@@ -126,7 +126,7 @@ public class Serv extends HttpServlet {
                 	session.setAttribute("sessionUserID", u.getId());
                     session.setAttribute("pseudo", u.getPseudo());
                     session.setMaxInactiveInterval(30*60);
-                    request.getRequestDispatcher("accueil.jsp").forward(request, response);
+                    DisplayTopicList(request, response);
                 } else {
                     // Mauvais mot de passe
                     // affichage du vrai mdp : POUR LE DEGUB UNIQUEMENT TODO supprimer en prod
