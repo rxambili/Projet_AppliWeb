@@ -17,7 +17,12 @@ public class Topic {
 	private Utilisateur createur;
 	@OneToMany(mappedBy = "topic", fetch=FetchType.EAGER)
 	private List<Message> messages;
-	
+
+	public Topic(){
+		this.titre = "No Title";
+		this.createur = null;
+		messages = new ArrayList<>();
+	}
 	public Topic(String titre, Utilisateur createur) {
 		this.titre = titre;
 		this.createur = createur;

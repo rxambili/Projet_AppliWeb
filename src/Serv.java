@@ -50,6 +50,7 @@ public class Serv extends HttpServlet {
         boolean connected = false; // utilisateur connecte ou non
         String utilisateur = ""; // nom de l'utilisateur connecte
         String op = request.getParameter("op");
+        int topicId;
         switch(op) {
             case "bienvenue" :
                 request.getRequestDispatcher("bienvenue.html").forward(request, response);
@@ -60,8 +61,13 @@ public class Serv extends HttpServlet {
             case "connexion" :
                 request.getRequestDispatcher("connexion.html").forward(request, response);
                 break;
+            case "Vcreationtopic" :
+                String titre = request.getParameter("titre");
+                f.ajoutTopic(titre);
+                DisplayTopicList(request, response);
+                break;
             case "accueil" :
-                request.getRequestDispatcher("accueil.jsp").forward(request, response);
+                DisplayTopicList(request, response);
                 break;
             case "moncompte" :
                 request.getRequestDispatcher("mon_compte.jsp").forward(request, response);
@@ -70,10 +76,8 @@ public class Serv extends HttpServlet {
                 request.getRequestDispatcher("creation_topic.html").forward(request, response);
                 break;
             case "afficherTopic" :
-                int topicId = Integer.parseInt(request.getParameter("topicId"));
-                Topic t = f.getTopic(topicId);
-
-                request.getRequestDispatcher("topic.jsp").forward(request, response);
+                topicId = Integer.parseInt(request.getParameter("topicId"));
+                DisplayTopic(topicId, request, response);
                 break;
             case "Vinscription" :
                 String nom = request.getParameter("nom");
@@ -108,26 +112,45 @@ public class Serv extends HttpServlet {
                     DisplayErrorPage("mauvais mot de passe, bon mot de passe :'"+u.getMdp()+"'", "connexion.html", request, response);
                 }
                 break;
-            case "Vcreationtopic" :
-                String titre = request.getParameter("titre");
-                f.ajoutTopic(titre);
-                request.getRequestDispatcher("accueil.jsp").forward(request, response);
-                break;
             case "Vcommentaire" :
-                Date date = null;
+                //Date date = null;
                 Calendar cal = Calendar.getInstance();
-                cal.setTime(date);
+                //cal.setTime(date);
                 int an = cal.get(Calendar.YEAR);
                 int mois = cal.get(Calendar.MONTH);
                 int jour = cal.get(Calendar.DAY_OF_MONTH);
                 String contenu = request.getParameter("contenu");
-                //TODO recuperer l'id du topic actuel dans les attribut de la requete
-                //f.getTopic().ajoutMessage(utilisateur, jour, mois + 1, an, contenu);
-                //request.getRequestDispatcher("topic.jsp").forward(request, response);
+                topicId = Integer.parseInt(request.getParameter("topicId"));
+                f.getTopic(topicId).ajoutMessage(utilisateur, jour, mois + 1, an, contenu);
+                DisplayTopic(topicId, request, response);
         }
 
     }
+
+    protected void DisplayTopicList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        /** envoi la page accueil.jsp
+         */
+        request.setAttribute("ListeTopics", f.ListerTopics());
+        request.getRequestDispatcher("accueil.jsp").forward(request, response);
+    }
+    protected void DisplayTopic(int topicId, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        /** envoi une page topic.jsp
+         */
+        Topic t = f.getTopic(topicId);
+        if (t==null){
+            // Topic innexistant
+            request.setAttribute("ListeTopics", f.ListerTopics());
+            request.getRequestDispatcher("accueil.jsp").forward(request, response);
+        }else {
+            request.setAttribute("topic", t);
+            request.getRequestDispatcher("topic.jsp").forward(request, response);
+        }
+    }
+
     protected void DisplayErrorPage(String message, String redirection, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        /**
+         * Envoi une page d'erreur
+         */
         request.setAttribute("ErrorMessage", message);
         request.setAttribute("Redirection", redirection);
         request.getRequestDispatcher("errorPage.jsp").forward(request, response);
