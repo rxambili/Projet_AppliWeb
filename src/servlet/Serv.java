@@ -1,7 +1,9 @@
+package servlet;
 
 
 import Entities.Topic;
 import Entities.Utilisateur;
+import facade.Facade;
 
 import java.io.IOException;
 import java.util.Calendar;
@@ -13,6 +15,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 //import Facade;
 
@@ -46,11 +49,12 @@ public class Serv extends HttpServlet {
      * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
      */
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // TODO Auto-generated method stub
-        boolean connected = false; // utilisateur connecte ou non
-        String utilisateur = ""; // nom de l'utilisateur connecte
+        
         String op = request.getParameter("op");
         int topicId;
+        int userID;
+        Utilisateur user;
+        HttpSession session;
         switch(op) {
             case "bienvenue" :
                 request.getRequestDispatcher("bienvenue.html").forward(request, response);
@@ -61,15 +65,27 @@ public class Serv extends HttpServlet {
             case "connexion" :
                 request.getRequestDispatcher("connexion.html").forward(request, response);
                 break;
+            case "deconnexion" :
+            	session = request.getSession();
+            	session.setAttribute("sessionUserID", null);
+                request.getRequestDispatcher("bienvenue.html").forward(request, response);
+                break;
             case "Vcreationtopic" :
                 String titre = request.getParameter("titre");
-                f.ajoutTopic(titre);
+                session = request.getSession();
+                userID = (int) session.getAttribute("sessionUserID");
+                Utilisateur createur = f.rechercherUtilisateur(userID);
+                f.ajoutTopic(titre, createur);
                 DisplayTopicList(request, response);
                 break;
             case "accueil" :
                 DisplayTopicList(request, response);
                 break;
             case "moncompte" :
+            	session = request.getSession();
+            	userID = (int) session.getAttribute("sessionUserID");
+            	user = f.rechercherUtilisateur(userID);
+            	request.setAttribute("sessionUser", user);
                 request.getRequestDispatcher("mon_compte.jsp").forward(request, response);
                 break;
             case "creationtopic" :
@@ -104,7 +120,8 @@ public class Serv extends HttpServlet {
                     DisplayErrorPage("Le compte n'existe pas\nliste des compte :\n"+s, "bienvenue.html", request, response);
                 } else if (mdp2.equals(u.getMdp())) {
                     // connexion OK
-                    connected = true;
+                	session = request.getSession();
+                	session.setAttribute("sessionUserID", u.getId());
                     request.getRequestDispatcher("accueil.jsp").forward(request, response);
                 } else {
                     // Mauvais mot de passe
@@ -121,7 +138,10 @@ public class Serv extends HttpServlet {
                 int jour = cal.get(Calendar.DAY_OF_MONTH);
                 String contenu = request.getParameter("contenu");
                 topicId = Integer.parseInt(request.getParameter("topicId"));
-                f.ajoutMessage(topicId, utilisateur, jour, mois + 1, an, contenu);
+                session = request.getSession();
+                userID = (int) session.getAttribute("sessionUserID");
+                user = f.rechercherUtilisateur(userID);
+                f.ajoutMessage(topicId, user.getPseudo(), jour, mois + 1, an, contenu);
                 DisplayTopic(topicId, request, response);
         }
 

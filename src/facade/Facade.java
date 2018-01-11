@@ -1,3 +1,4 @@
+package facade;
 
 import java.util.Collection;
 import java.util.Date;
@@ -51,6 +52,16 @@ public class Facade {
         }
         return null;
     }
+    
+    public Utilisateur rechercherUtilisateur(int id){
+        TypedQuery<Utilisateur> req = em.createQuery("select u from Utilisateur u where u.id = :id",
+                Utilisateur.class).setParameter("id", id).setMaxResults(1);
+        List<Utilisateur> results = req.getResultList();
+        if (results.size() > 0) {
+            return results.get(0);
+        }
+        return null;
+    }
 
     public List<Utilisateur> listerUtilisateurs(){
         TypedQuery<Utilisateur> req = em.createQuery("select u from Utilisateur u",
@@ -76,7 +87,7 @@ public class Facade {
         ajoutTopic(titre, null);
     }
     public void ajoutTopic(String titre, Utilisateur proprietaire){
-        Topic t = new Topic(titre, null);
+        Topic t = new Topic(titre, proprietaire);
         em.persist(t);
     }
 

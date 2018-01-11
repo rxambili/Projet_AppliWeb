@@ -11,17 +11,17 @@
 	<body>
 		<form method="get" action="Serv">
 		<p><input type="submit" value="Déconnexion"></p>
-		<p><input type="hidden" name="op" value="bienvenue"></p>
+		<p><input type="hidden" name="op" value="deconnexion"></p>
 		</form>
 		<form method="get" action="Serv">
 		<p><input type="submit" value="< page Accueil"></p>
 		<p><input type="hidden" name="op" value="accueil"></p>
 		</form><br>
 		<%
-		Utilisateur p = (Utilisateur) request.getAttribute("getUtilisateurcourant");%>
+		Utilisateur p = (Utilisateur) request.getAttribute("sessionUser");%>
 		Mon nom : <i><%= p.getNom() %></i>
 		Mon prénom : <i><%= p.getPrenom() %></i>
-		Mon pseudonyme : <i><%= p.getPseudonyme() %></i>
+		Mon pseudonyme : <i><%= p.getPseudo() %></i>
 		Mon mot de passe : <i><%= p.getMdp() %></i>
 	</body>
 </html>

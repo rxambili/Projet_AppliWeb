@@ -17,7 +17,7 @@
 	<body>
 		<form method="get" action="Serv">
 		<p><input type="submit" value="Déconnexion"></p>
-		<p><input type="hidden" name="op" value="bienvenue"></p>
+		<p><input type="hidden" name="op" value="deconnexion"></p>
 		</form>
 		<form method="get" action="Serv">
 		<p><input type="submit" value="< page Accueil"></p>
@@ -31,7 +31,7 @@
 		<%
 		if (messages != null) {
 			for (Message m : messages) {%>
-			● <i><%= (m.getAuteur()==null? "Anonyme") : m.getAuteur() )+ " (" + m.getJour() + "/" + m.getMois() + "/" + m.getAn() + ") :" %></i><br>
+			● <i><%= (m.getAuteur()==null? "Anonyme" : m.getAuteur().getPseudo() )+ " (" + m.getJour() + "/" + m.getMois() + "/" + m.getAn() + ") :" %></i><br>
 			<%= m.getContenu() %><br>
 			<%
 			}
