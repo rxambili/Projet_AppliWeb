@@ -49,7 +49,15 @@ public class Serv extends HttpServlet {
      * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
      */
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+<<<<<<< HEAD:src/servlet/Serv.java
         
+=======
+
+        // Vérification de la session de l'utilisateur
+        HttpSession session = request.getSession();
+
+        String utilisateur = ""; // nom de l'utilisateur connecte
+>>>>>>> 698734b2c4ef09f31a6e07231b79bcf312c648ba:src/Serv.java
         String op = request.getParameter("op");
         int topicId;
         int userID;
@@ -71,6 +79,7 @@ public class Serv extends HttpServlet {
                 request.getRequestDispatcher("bienvenue.html").forward(request, response);
                 break;
             case "Vcreationtopic" :
+                CheckUserConnected(session, request, response);
                 String titre = request.getParameter("titre");
                 session = request.getSession();
                 userID = (int) session.getAttribute("sessionUserID");
@@ -82,16 +91,22 @@ public class Serv extends HttpServlet {
                 DisplayTopicList(request, response);
                 break;
             case "moncompte" :
+<<<<<<< HEAD:src/servlet/Serv.java
             	session = request.getSession();
             	userID = (int) session.getAttribute("sessionUserID");
             	user = f.rechercherUtilisateur(userID);
             	request.setAttribute("sessionUser", user);
+=======
+                CheckUserConnected(session, request, response);
+>>>>>>> 698734b2c4ef09f31a6e07231b79bcf312c648ba:src/Serv.java
                 request.getRequestDispatcher("mon_compte.jsp").forward(request, response);
                 break;
             case "creationtopic" :
+                CheckUserConnected(session, request, response);
                 request.getRequestDispatcher("creation_topic.html").forward(request, response);
                 break;
             case "afficherTopic" :
+                CheckUserConnected(session, request, response);
                 topicId = Integer.parseInt(request.getParameter("topicId"));
                 DisplayTopic(topicId, request, response);
                 break;
@@ -120,8 +135,14 @@ public class Serv extends HttpServlet {
                     DisplayErrorPage("Le compte n'existe pas\nliste des compte :\n"+s, "bienvenue.html", request, response);
                 } else if (mdp2.equals(u.getMdp())) {
                     // connexion OK
+<<<<<<< HEAD:src/servlet/Serv.java
                 	session = request.getSession();
                 	session.setAttribute("sessionUserID", u.getId());
+=======
+                    session.setAttribute("pseudo", u.getPseudo());
+                    session.setAttribute("connected", true);
+                    session.setMaxInactiveInterval(30*60);
+>>>>>>> 698734b2c4ef09f31a6e07231b79bcf312c648ba:src/Serv.java
                     request.getRequestDispatcher("accueil.jsp").forward(request, response);
                 } else {
                     // Mauvais mot de passe
@@ -130,6 +151,7 @@ public class Serv extends HttpServlet {
                 }
                 break;
             case "Vcommentaire" :
+                CheckUserConnected(session, request, response);
                 //Date date = null;
                 Calendar cal = Calendar.getInstance();
                 //cal.setTime(date);
@@ -174,5 +196,16 @@ public class Serv extends HttpServlet {
         request.setAttribute("ErrorMessage", message);
         request.setAttribute("Redirection", redirection);
         request.getRequestDispatcher("errorPage.jsp").forward(request, response);
+    }
+
+    protected void CheckUserConnected(HttpSession session, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // i.e filter
+        if (session==null ) {
+            DisplayErrorPage("Null session.", "connexion.html", request, response);
+
+        } else if (session.getAttribute("connected") == null || !(boolean)session.getAttribute("connected") ){
+            // non connecté
+            DisplayErrorPage("Vous devez etre connecte pour realiser cette action.", "connexion.html", request, response);
+        }
     }
 }

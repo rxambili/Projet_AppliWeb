@@ -31,7 +31,11 @@
 		<%
 		if (messages != null) {
 			for (Message m : messages) {%>
+<<<<<<< HEAD
 			● <i><%= (m.getAuteur()==null? "Anonyme" : m.getAuteur().getPseudo() )+ " (" + m.getJour() + "/" + m.getMois() + "/" + m.getAn() + ") :" %></i><br>
+=======
+			● <i><%= (m.getAuteur()==null? "Anonyme" : m.getAuteur() )+ " (" + m.getJour() + "/" + m.getMois() + "/" + m.getAn() + ") :" %></i><br>
+>>>>>>> 698734b2c4ef09f31a6e07231b79bcf312c648ba
 			<%= m.getContenu() %><br>
 			<%
 			}
