@@ -13,6 +13,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 //import Facade;
 
@@ -46,8 +47,10 @@ public class Serv extends HttpServlet {
      * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
      */
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // TODO Auto-generated method stub
-        boolean connected = false; // utilisateur connecte ou non
+
+        // Vérification de la session de l'utilisateur
+        HttpSession session = request.getSession();
+
         String utilisateur = ""; // nom de l'utilisateur connecte
         String op = request.getParameter("op");
         int topicId;
@@ -62,6 +65,7 @@ public class Serv extends HttpServlet {
                 request.getRequestDispatcher("connexion.html").forward(request, response);
                 break;
             case "Vcreationtopic" :
+                CheckUserConnected(session, request, response);
                 String titre = request.getParameter("titre");
                 f.ajoutTopic(titre);
                 DisplayTopicList(request, response);
@@ -70,12 +74,15 @@ public class Serv extends HttpServlet {
                 DisplayTopicList(request, response);
                 break;
             case "moncompte" :
+                CheckUserConnected(session, request, response);
                 request.getRequestDispatcher("mon_compte.jsp").forward(request, response);
                 break;
             case "creationtopic" :
+                CheckUserConnected(session, request, response);
                 request.getRequestDispatcher("creation_topic.html").forward(request, response);
                 break;
             case "afficherTopic" :
+                CheckUserConnected(session, request, response);
                 topicId = Integer.parseInt(request.getParameter("topicId"));
                 DisplayTopic(topicId, request, response);
                 break;
@@ -104,7 +111,9 @@ public class Serv extends HttpServlet {
                     DisplayErrorPage("Le compte n'existe pas\nliste des compte :\n"+s, "bienvenue.html", request, response);
                 } else if (mdp2.equals(u.getMdp())) {
                     // connexion OK
-                    connected = true;
+                    session.setAttribute("pseudo", u.getPseudo());
+                    session.setAttribute("connected", true);
+                    session.setMaxInactiveInterval(30*60);
                     request.getRequestDispatcher("accueil.jsp").forward(request, response);
                 } else {
                     // Mauvais mot de passe
@@ -113,6 +122,7 @@ public class Serv extends HttpServlet {
                 }
                 break;
             case "Vcommentaire" :
+                CheckUserConnected(session, request, response);
                 //Date date = null;
                 Calendar cal = Calendar.getInstance();
                 //cal.setTime(date);
@@ -154,5 +164,16 @@ public class Serv extends HttpServlet {
         request.setAttribute("ErrorMessage", message);
         request.setAttribute("Redirection", redirection);
         request.getRequestDispatcher("errorPage.jsp").forward(request, response);
+    }
+
+    protected void CheckUserConnected(HttpSession session, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // i.e filter
+        if (session==null ) {
+            DisplayErrorPage("Null session.", "connexion.html", request, response);
+
+        } else if (session.getAttribute("connected") == null || !(boolean)session.getAttribute("connected") ){
+            // non connecté
+            DisplayErrorPage("Vous devez etre connecte pour realiser cette action.", "connexion.html", request, response);
+        }
     }
 }

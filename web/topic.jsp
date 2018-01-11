@@ -31,7 +31,7 @@
 		<%
 		if (messages != null) {
 			for (Message m : messages) {%>
-			● <i><%= (m.getAuteur()==null? "Anonyme") : m.getAuteur() )+ " (" + m.getJour() + "/" + m.getMois() + "/" + m.getAn() + ") :" %></i><br>
+			● <i><%= (m.getAuteur()==null? "Anonyme" : m.getAuteur() )+ " (" + m.getJour() + "/" + m.getMois() + "/" + m.getAn() + ") :" %></i><br>
 			<%= m.getContenu() %><br>
 			<%
 			}

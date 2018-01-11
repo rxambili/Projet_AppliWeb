@@ -16,10 +16,10 @@
 		<p><input type="submit" value="Déconnexion"></p>
 		<p><input type="hidden" name="op" value="bienvenue"></p>
 		</form>
-		<form method="get" action="Serv">
+		<!--<form method="get" action="Serv">
 		<p><input type="submit" value="Mon compte"></p>
 		<p><input type="hidden" name="op" value="moncompte"></p><br>
-		</form>
+		</form>-->
 		<b>LISTE DES TOPICS : </b><br>
 		<form method="get" action="Serv">
 			<input type="submit" value="Nouveau Topic">
