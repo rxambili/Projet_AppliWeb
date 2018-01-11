@@ -19,6 +19,7 @@ public class Message {
 	private Topic topic;
 	
 	public Message(Utilisateur auteur, int jour, int mois, int an, String contenu) {
+
 		this.auteur = auteur;
 		this.jour = jour;
 		this.mois = mois;
@@ -27,6 +28,22 @@ public class Message {
 	}
 
 	public Message() {
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public Topic getTopic() {
+		return topic;
+	}
+
+	public void setTopic(Topic topic) {
+		this.topic = topic;
 	}
 
 	public int getNumero() {

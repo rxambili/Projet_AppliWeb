@@ -7,6 +7,7 @@
 <html>
 	<%
 	Topic t = (Topic)request.getAttribute("topic");
+	List<Message> messages = t.getMessages();
 	%>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -26,12 +27,11 @@
 		<p><input type="submit" value="Mon compte"></p>
 		<p><input type="hidden" name="op" value="moncompte"></p>
 		</form><br>
-		<b>TOPIC : </b><%= t.getTitre() %><br>
+		<b>TOPIC : </b><%= t.getTitre() %>, nombre message : <%= messages.size() %><br>
 		<%
-		List<Message> messages = t.getMessages();
 		if (messages != null) {
 			for (Message m : messages) {%>
-			● <i><%= m.getAuteur() + " ()" + m.getJour() + "/" + m.getMois() + "/" + m.getAn() + ") :" %></i>
+			● <i><%= (m.getAuteur()==null? "Anonyme") : m.getAuteur() )+ " (" + m.getJour() + "/" + m.getMois() + "/" + m.getAn() + ") :" %></i><br>
 			<%= m.getContenu() %><br>
 			<%
 			}
@@ -40,7 +40,7 @@
 		<form method="post" action="Serv">
 		<p><input type="text" name="contenu"></p>
 		<p><input type="submit" value="VALIDER"></p>
-		<p><input type="hidden" name="topicId" value=<%=t.getId()%>%></p>
+		<p><input type="hidden" name="topicId" value=<%=t.getId()%>></p>
 		<p><input type="hidden" name="op" value="Vcommentaire"></p>
 		</form>
 	</body>

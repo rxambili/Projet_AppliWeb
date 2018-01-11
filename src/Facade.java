@@ -87,14 +87,18 @@ public class Facade {
     /**
      * Liste les message d'un topic donné
      */
-    public List<Message> ListerTopicMessages(){return null;}
+    public List<Message> ListerTopicMessages(int topicId){
+        return getTopic(topicId).getMessages();
+    }
 
     // A voir quel signature est la plus pratique selon la BDD (potentiellement les deux selon les cas)
     public void ajoutMessage(int topicId, String pseudoAuteur, int jour, int mois, int an, String contenu) {
         Topic t = getTopic(topicId);
         Utilisateur auteur = rechercherUtilisateur(pseudoAuteur);
-        Message m = new Message(auteur, jour, mois, an, contenu);
+        Message m = new Message(null, jour, mois, an, contenu);
         em.persist(m);
+        m.setAuteur(auteur);
+        m.setTopic(t);
     }
 
     // A voir quel signature est la plus pratique selon la BDD (potentiellement les deux selon les cas)

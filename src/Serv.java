@@ -121,7 +121,7 @@ public class Serv extends HttpServlet {
                 int jour = cal.get(Calendar.DAY_OF_MONTH);
                 String contenu = request.getParameter("contenu");
                 topicId = Integer.parseInt(request.getParameter("topicId"));
-                f.getTopic(topicId).ajoutMessage(utilisateur, jour, mois + 1, an, contenu);
+                f.ajoutMessage(topicId, utilisateur, jour, mois + 1, an, contenu);
                 DisplayTopic(topicId, request, response);
         }
 

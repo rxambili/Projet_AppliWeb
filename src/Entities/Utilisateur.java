@@ -14,6 +14,8 @@ public class Utilisateur {
 	private String pseudo;
 	private String mdp;
 
+
+
 	@OneToMany(mappedBy="auteur")
 	private List<Message> messages;
     @OneToMany(mappedBy="createur")
@@ -28,7 +30,30 @@ public class Utilisateur {
 		this.pseudo = pseudo;
 		this.mdp = mdp;
 	}
-	
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public List<Message> getMessages() {
+		return messages;
+	}
+
+	public void setMessages(List<Message> messages) {
+		this.messages = messages;
+	}
+
+	public List<Topic> getTopics() {
+		return topics;
+	}
+
+	public void setTopics(List<Topic> topics) {
+		this.topics = topics;
+	}
 	public String getNom() {
 		return this.nom;
 	}
