@@ -2,33 +2,39 @@
 <html>
 	<head>
 		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<meta name="description" content="">
+		<meta name="author" content="">
+		
 		<title>Connexion</title>
-
-		<!-- Bootstrap Stylesheet -->
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
-
+		
+		<!-- Bootstrap core CSS -->
+		<link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+		
+		<link rel="stylesheet" href="css/inscription.css" />
+		
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
 	</head>
 
-	<body>
-		<form method="get" action="Serv">
-		<p><input type="submit" value="< page Bienvenue"></p>
-		<p><input type="hidden" name="op" value="bienvenue"></p>
-		</form><br>
-		<b>CONNEXION :</b><br>
-		<form method="post" action="Serv">
-		<p>Pseudonyme : <input type="text" name="pseudo"></p>
-		<p>Mot de passe : <input type="text" name="mdp"></p>
-		<p><input type="submit" value="SE CONNECTER"></p>
-		<p><input type="hidden" name="op" value="Vconnexion"></p>
-		</form>
+	<body ng-app>
 
-		<!-- Load jQuerry-->
-		<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-		<!-- Load Popper -->
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-		<!-- Load Bootstrap -->
-		<!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>-->
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4" crossorigin="anonymous"></script>
+		<!-- Navigation -->
+		<nav class=="navbar navbar-findcond fixed-top bg-faded" role="navigation">
+			<div ng-include="'modules/top_navbar.html'"></div>
+		</nav>
+		
+		<div id="logbox">
+			<form id="signup" method="post" action="Serv">
+				<h1>Connexion</h1>
+				<input name="pseudo" type="text" placeholder="Pseudo" class="input pass"/>
+				<input name="mdp" type="password" placeholder="Mot de passe" required="required" class="input pass"/>
+				<input type="submit" value="Se connecter!" class="inputButton"/>
+				<input type="hidden" name="op" value="Vconnexion">
+				<div class="text-center"">
+                    <a href="#" id="">Créer un compte</a> - <a href="#" id="">Mot de passe oublié?</a>
+                </div>
+			</form>
+		</div>
 
 	</body>
 </html>
