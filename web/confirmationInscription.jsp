@@ -13,7 +13,7 @@ L'utilisateur a bien été enregistré
 <p>nom :<%=request.getAttribute("nom") %></p>
 <p>pseudo :<%=request.getAttribute("pseudo") %></p>
 <p>mot de passe :<%=request.getAttribute("mdp") %></p>
-<meta http-equiv="refresh" content="3; connexion.html">
+<meta http-equiv="refresh" content="3; Public?op=connexion">
 
 </body>
 </html>

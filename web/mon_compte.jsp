@@ -9,11 +9,11 @@
 	</head>
 	
 	<body>
-		<form method="get" action="Serv">
+		<form method="get" action="Restricted">
 		<p><input type="submit" value="Déconnexion"></p>
 		<p><input type="hidden" name="op" value="deconnexion"></p>
 		</form>
-		<form method="get" action="Serv">
+		<form method="get" action="Restricted">
 		<p><input type="submit" value="< page Accueil"></p>
 		<p><input type="hidden" name="op" value="accueil"></p>
 		</form><br>
