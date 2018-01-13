@@ -12,24 +12,24 @@
 	</head>
 	
 	<body>
-		<form method="get" action="Serv">
+		<form method="get" action="Restricted">
 		<p><input type="submit" value="Déconnexion"></p>
 		<p><input type="hidden" name="op" value="deconnexion"></p>
 		</form>
-		<!--<form method="get" action="Serv">
+		<form method="get" action="Restricted">
 		<p><input type="submit" value="Mon compte"></p>
 		<p><input type="hidden" name="op" value="moncompte"></p><br>
-		</form>-->
+		</form>
 		<b>LISTE DES TOPICS : </b><br>
-		<form method="get" action="Serv">
+		<form method="get" action="Restricted">
 			<input type="submit" value="Nouveau Topic">
 			<input type="hidden" name="op" value="creationtopic"><br>
 		</form>
 		<%
 		if (topics != null) {
 			for (Topic t : topics) {%>
-			<a href = "Serv?op=afficherTopic&topicId=<%= t.getId() %>">● <%= t.getTitre() %></a><br>
-<%--<form method="get" action="Serv">
+			<a href = "Restricted?op=afficherTopic&topicId=<%= t.getId() %>">● <%= t.getTitre() %></a><br>
+<%--<form method="get" action="Restricted">
     <p><input type="hidden" name="op" value="afficherTopic"></p><br>
     <p><input type="hidden" name="topicId" value="<%=t.getId()%>"></p><br>
     <p><input type="submit" value="<%= t.getTitre()%>"></p>
