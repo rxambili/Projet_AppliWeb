@@ -4,7 +4,7 @@ var browserSync = require('browser-sync').create();
 var header = require('gulp-header');
 var cleanCSS = require('gulp-clean-css');
 var rename = require("gulp-rename");
-var pkg = require('./package.json');
+var pkg = require('../package.json');
 
 // Set the banner content
 var banner = ['/*!\n',

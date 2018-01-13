@@ -25,7 +25,7 @@
 		</nav>
 	
 		<div id="logbox">
-			<form id="signup" method="post" action="Serv">
+			<form id="signup" method="post" action="Public">
 				<h1>Créer un compte</h1>
 				<input name="pseudo" type="text" placeholder="Pseudo" pattern="^[\w]{3,16}$" autofocus="autofocus" required="required" class="input pass"/>
 				<input name="prenom" type="text" placeholder="Prénom" required="required" class="input pass"/>
@@ -36,7 +36,7 @@
 				<input type="submit" value="S'inscrire!" class="inputButton"/>
 				<input type="hidden" name="op" value="Vinscription">
 				<div class="text-center">
-					Déjà membre ? <a href="connexion.html" id="login_id">Se connecter</a>
+					Déjà membre ? <a href="Public?op=connexion" id="login_id">Se connecter</a>
 				</div>
 			</form>
 		</div>
