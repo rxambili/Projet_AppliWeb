@@ -48,21 +48,10 @@ public class LoginFilter implements Filter {
         //Serv.DisplayErrorPage("Filter uri=" + uri + "<br> restrictedTemplate ="+restrictedURI, "connexion.html", request, response);
 
         // Autorise l'accès aux plugins par des url commençant en '/plugins..."
-        if ( uri.indexOf("/plugins") > 0){
+        if ( uri.indexOf("/plugins") > 0 || uri.indexOf("/css") > 0 || uri.indexOf("/js") > 0 || uri.indexOf("/template") > 0 || uri.indexOf("/bootstrap") > 0){
             chain.doFilter(request, response);
-        // Autorise l'accès aux template par des url commençant en '/template..."
-        } else if ( uri.indexOf("/template") > 0){
-            chain.doFilter(request, response);
-        // Autorise l'accès aux script bootstrap par des url commençant en '/bootstrap..."
-        } else if ( uri.indexOf("/bootstrap") > 0){
-            chain.doFilter(request, response);
-        } 
-        else if( uri.indexOf("/build") > 0){
-            chain.doFilter(request, response);
-        } 
-        else if( uri.indexOf("/dist") > 0){
-            chain.doFilter(request, response);
-        }if ( publicPage || (connectedUser && restrictedPage) || (connectedAdmin && adminPage)  ) {
+
+        }else if ( publicPage || (connectedUser && restrictedPage) || (connectedAdmin && adminPage)  ) {
             // OK on poursuit la requete normalement
             chain.doFilter(request, response);
         } else {
