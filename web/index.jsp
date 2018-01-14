@@ -12,7 +12,7 @@
   </head>
   <body>
   $END$
-  <meta http-equiv="refresh" content="1; Public?op=accueil">
+  <meta http-equiv="refresh" content="1; Public?op=bienvenue">
   <%-- ceci est une redirection --%>
   </body>
 </html>

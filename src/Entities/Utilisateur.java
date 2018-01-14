@@ -13,13 +13,18 @@ public class Utilisateur {
 	private String prenom;
 	private String pseudo;
 	private String mdp;
-
+	private boolean isAdmin;
+	private boolean isVip;
 
 
 	@OneToMany(mappedBy="auteur")
 	private List<Message> messages;
     @OneToMany(mappedBy="createur")
     private List<Topic> topics;
+	@OneToMany(mappedBy="utilisateur")
+	private List<Permission> permissions;
+	@OneToMany(mappedBy="utilisateur")
+	private List<Invitation> invitations;
 
 
 	public Utilisateur(){}
@@ -29,6 +34,8 @@ public class Utilisateur {
 		this.prenom = prenom;
 		this.pseudo = pseudo;
 		this.mdp = mdp;
+		this.isAdmin = this.pseudo.equals("admin");
+		this.isVip = this.isAdmin;
 	}
 
 	public int getId() {
@@ -79,4 +86,45 @@ public class Utilisateur {
 	public void setMdp(String mdp) {
 		this.mdp = mdp;
 	}
+
+	public boolean isAdmin() {
+		return isAdmin;
+	}
+
+	public void setAdmin(boolean admin) {
+		isAdmin = admin;
+	}
+
+	public List<Invitation> getInvitations() {
+		return invitations;
+	}
+
+	public void setInvitations(List<Invitation> invitations) {
+		this.invitations = invitations;
+	}
+
+	public List<Permission> getPermissions() {
+		return permissions;
+	}
+	public Permission getPermission(int topicId) {
+		for(Permission p : this.getPermissions()){
+			if (p.topic.id == topicId){
+				return p;
+			}
+		}
+		return null;
+	}
+
+	public void setPermissions(List<Permission> permissions) {
+		this.permissions = permissions;
+	}
+
+	public boolean isVip() {
+		return isVip || isAdmin;
+	}
+
+	public void setVip(boolean vip) {
+		isVip = vip;
+	}
+
 }

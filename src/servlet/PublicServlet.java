@@ -61,8 +61,9 @@ public class PublicServlet extends Serv{
                         HttpSession session = request.getSession();
                         session.setAttribute("sessionUserID", u.getId());
                         session.setAttribute("pseudo", u.getPseudo());
+                        session.setAttribute("isAdmin", u.isAdmin()?true:null);
                         session.setMaxInactiveInterval(30 * 60);
-                        DisplayTopicList(request, response);
+                        DisplayTopicList(u, request, response);
                     } else {
                         // Mauvais mot de passe
                         // affichage du vrai mdp : POUR LE DEGUB UNIQUEMENT TODO supprimer en prod

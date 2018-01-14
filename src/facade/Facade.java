@@ -10,9 +10,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.rmi.CORBA.Util;
 
-import Entities.Message;
-import Entities.Topic;
-import Entities.Utilisateur;
+import Entities.*;
 
 
 @Singleton
@@ -74,6 +72,18 @@ public class Facade {
      */
     public List<Topic> ListerTopics(){return em.createQuery("select t from Topic t",
             Topic.class).getResultList();}
+    public List<Topic> ListerTopics(Utilisateur user){
+        if (user.isVip()){
+            return ListerTopics();
+        }
+        return em.createQuery("select distinct t from Topic t, Permission p " +
+                        "where (t.createur.id = :userId or (t.id = p.topic.id and p.utilisateur.id = :userId))", // or t.isPublic
+            Topic.class)
+                .setParameter("userId", user.getId())
+                .setParameter("userId", user.getId())
+                .getResultList();
+    }
+
     public Topic getTopic(int topicId){
         TypedQuery<Topic> req = em.createQuery("select t from Topic t where t.id = :identifier",
                 Topic.class).setParameter("identifier", topicId).setMaxResults(1);
@@ -87,8 +97,19 @@ public class Facade {
         ajoutTopic(titre, null);
     }
     public void ajoutTopic(String titre, Utilisateur proprietaire){
+        ajoutTopic(titre, proprietaire, true);
+    }
+    public void ajoutTopic(String titre, Utilisateur proprietaire, boolean isPublic){
         Topic t = new Topic(titre, proprietaire);
+        t.setPublic(isPublic);
         em.persist(t);
+
+        Permission p = new Permission();
+        em.persist(p);
+        p.setTopic(t);
+        p.setUtilisateur(proprietaire);
+        p.setDroit_invitation(true);
+        //... TODO
     }
 
     public void supprimerTopic(int identifer){
@@ -120,5 +141,35 @@ public class Facade {
         this.em.createNativeQuery("remove * from Message m where m.topic.id = :topicId and m.numero = :num")
                 .setParameter("topicId", topicIdentifier)
                 .setParameter("num", numero);
+    }
+
+    public void invite(Utilisateur inviteUser, Topic t) {
+        // Vérifier que la personne n'a pas déjà été invitée
+        for (Permission p : t.getPermissions()){
+            if (p.getUtilisateur().getId() == inviteUser.getId()) return;
+        }
+        for (Invitation i : t.getInvitations()){
+            if (i.getUtilisateur().getId() == inviteUser.getId()) return;
+        }
+        Invitation i = new Invitation(t, inviteUser);
+        this.em.persist(i);
+        i.setTopic(t);
+
+    }
+
+    public List<Utilisateur> getInvitations(Topic t) {
+        return em.createQuery("select distinct u from Utilisateur u, Topic t, Invitation i " +
+                        "where i.utilisateur.id = u.id and i.topic.id = t.id and t.id = :topicId",
+                Utilisateur.class)
+                .setParameter("topicId", t.getId())
+                .getResultList();
+    }
+
+    public List<Utilisateur> getPermissions(Topic t) {
+        return em.createQuery("select distinct u from Utilisateur u, Topic t, Permission p " +
+                        "where p.utilisateur.id = u.id and p.topic.id = t.id and t.id = :topicId",
+                Utilisateur.class)
+                .setParameter("topicId", t.getId())
+                .getResultList();
     }
 }

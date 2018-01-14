@@ -1,5 +1,6 @@
 package servlet;
 
+import Entities.Topic;
 import Entities.Utilisateur;
 
 import javax.servlet.ServletException;
@@ -24,12 +25,12 @@ public class RestrictedServlet extends Serv{
         HttpSession session = request.getSession();
         String op = request.getParameter("op");
         int topicId;
-        int userID;
-        Utilisateur user;
+        int userID=(int)session.getAttribute("sessionUserID");
+        Utilisateur user = f.rechercherUtilisateur(userID);
         if(op!=null) {
             switch (op) {
                 case "accueil":
-                    DisplayTopicList(request, response);
+                    DisplayTopicList(user, request, response);
                     break;
                 case "deconnexion":
                     session.setAttribute("sessionUserID", null);
@@ -37,31 +38,23 @@ public class RestrictedServlet extends Serv{
                     request.getRequestDispatcher("bienvenue.html").forward(request, response);
                     break;
                 case "Vcreationtopic":
-                    //CheckUserConnected(session, request, response);
                     String titre = request.getParameter("titre");
-                    userID = (int) session.getAttribute("sessionUserID");
-                    Utilisateur createur = f.rechercherUtilisateur(userID);
-                    f.ajoutTopic(titre, createur);
-                    DisplayTopicList(request, response);
+                    boolean isPublic = request.getParameter("isPublic").equals("true");
+                    f.ajoutTopic(titre, user, isPublic);
+                    DisplayTopicList(user, request, response);
                     break;
                 case "moncompte":
-                    //CheckUserConnected(session, request, response);
-                    userID = (int) session.getAttribute("sessionUserID");
-                    user = f.rechercherUtilisateur(userID);
                     request.setAttribute("sessionUser", user);
                     request.getRequestDispatcher("mon_compte.jsp").forward(request, response);
                     break;
                 case "creationtopic":
-                    //CheckUserConnected(session, request, response);
                     request.getRequestDispatcher("creation_topic.html").forward(request, response);
                     break;
                 case "afficherTopic":
-                    //CheckUserConnected(session, request, response);
                     topicId = Integer.parseInt(request.getParameter("topicId"));
-                    DisplayTopic(topicId, request, response);
+                    DisplayTopic(topicId, user, request, response);
                     break;
                 case "Vcommentaire":
-                    //CheckUserConnected(session, request, response);
                     //Date date = null;
                     Calendar cal = Calendar.getInstance();
                     //cal.setTime(date);
@@ -70,16 +63,24 @@ public class RestrictedServlet extends Serv{
                     int jour = cal.get(Calendar.DAY_OF_MONTH);
                     String contenu = request.getParameter("contenu");
                     topicId = Integer.parseInt(request.getParameter("topicId"));
-                    userID = (int) session.getAttribute("sessionUserID");
-                    user = f.rechercherUtilisateur(userID);
                     f.ajoutMessage(topicId, user.getPseudo(), jour, mois + 1, an, contenu);
-                    DisplayTopic(topicId, request, response);
+                    DisplayTopic(topicId, user, request, response);
                     break;
+
+                case "invite":
+                    Utilisateur inviteUser = f.rechercherUtilisateur(request.getParameter("pseudo"));
+                    Topic t = f.getTopic(Integer.parseInt(request.getParameter("topicId")));
+                    if (t.canInvite(user) && inviteUser!=null) {
+                        f.invite(inviteUser, t);
+                    }else{
+                        //TODO fail, pas le droit ou le pseudo invité n'existe pas
+                    }
+                    DisplayTopic(t.getId(), user, request, response);
                 default:
                     DisplayErrorPage("Requete non reconnue par Public", "", request, response);
             }
         }else {
-            DisplayTopicList(request,response);
+            DisplayTopicList(user, request,response);
         }
 
     }

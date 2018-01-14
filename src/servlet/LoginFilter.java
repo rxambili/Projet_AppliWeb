@@ -38,7 +38,7 @@ public class LoginFilter implements Filter {
 
         String uri = request.getRequestURI();
 
-        boolean connectedAdmin = session != null && session.getAttribute("admin") != null ;
+        boolean connectedAdmin = session != null && session.getAttribute("isAdmin") != null ;
         boolean connectedUser = connectedAdmin || (session != null && session.getAttribute("sessionUserID") != null);
 
         boolean restrictedPage = uri.startsWith(restrictedURI);

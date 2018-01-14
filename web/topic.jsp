@@ -1,8 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ page import="Entities.Topic" %>
-<%@ page import="Entities.Message" %>
 <%@ page import="java.util.List" %>
+<%@ page import="Entities.*" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 	<%
@@ -44,5 +43,26 @@
 		<p><input type="hidden" name="topicId" value=<%=t.getId()%>></p>
 		<p><input type="hidden" name="op" value="Vcommentaire"></p>
 		</form>
+		<br>
+		<%if ((boolean)request.getAttribute("canInvite")) {%>
+			Personnes ayant des permissions sur ce topic:<br>
+
+			<%List<Utilisateur> permittedUsers = (List<Utilisateur>)request.getAttribute("permittedUsers");
+			for (Utilisateur u : permittedUsers) {%>
+				- <%= u.getPseudo()%> <br>
+			<%}%>
+			<br>
+			Invitation en attentes:<br>
+			<% List<Utilisateur> invitedUsers = (List<Utilisateur>)request.getAttribute("invitedUsers");
+			for (Utilisateur u : invitedUsers) {%>
+				- <%= u.getPseudo()%> <br>
+			<%}%>
+			<form method="post" action="Restricted">
+				<input type="text" name="invitePseudo" placeholder="pseudo">
+				<input type="submit" value="Envoyer une invitation">
+				<input type="hidden" name="topicId" value=<%=t.getId()%>>
+				<input type="hidden" name="op" value="invite">
+			</form>
+		<%}%>
 	</body>
 </html>

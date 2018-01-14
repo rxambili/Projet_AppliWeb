@@ -1,13 +1,17 @@
 package servlet;
 
 
+import Entities.Invitation;
+import Entities.Permission;
 import Entities.Topic;
 import Entities.Utilisateur;
 import facade.Facade;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
@@ -48,23 +52,34 @@ public class Serv extends HttpServlet {
         DisplayErrorPage("Requete non reconnue par Serv", "", request, response);
     }
 
-    protected void DisplayTopicList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void DisplayTopicList(Utilisateur user, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         /** envoi la page accueil.jsp
          */
-        request.setAttribute("ListeTopics", f.ListerTopics());
+        request.setAttribute("ListeTopics", f.ListerTopics(user));
         request.getRequestDispatcher("accueil.jsp").forward(request, response);
     }
-    protected void DisplayTopic(int topicId, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void DisplayTopic(int topicId, Utilisateur user, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         /** envoi une page topic.jsp
          */
         Topic t = f.getTopic(topicId);
+
         if (t==null){
             // Topic innexistant
             request.setAttribute("ListeTopics", f.ListerTopics());
             request.getRequestDispatcher("accueil.jsp").forward(request, response);
         }else {
+            request.setAttribute("canInvite", t.canInvite(user));
             request.setAttribute("topic", t);
-            request.getRequestDispatcher("topic.jsp").forward(request, response);
+            if (t.canInvite(user)) {
+                // Get les permission qui son lazy!
+                List<Utilisateur> invitedUsers = f.getInvitations(t);
+                List<Utilisateur> permittedUsers = f.getPermissions(t);
+                request.setAttribute("invitedUsers", invitedUsers);
+                request.setAttribute("permittedUsers" , permittedUsers);
+                request.getRequestDispatcher("topic.jsp").forward(request, response);
+            }else {
+                request.getRequestDispatcher("topic.jsp").forward(request, response);
+            }
         }
     }
 

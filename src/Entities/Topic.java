@@ -17,6 +17,11 @@ public class Topic {
 	private Utilisateur createur;
 	@OneToMany(mappedBy = "topic", fetch=FetchType.EAGER)
 	private List<Message> messages;
+	private boolean isPublic = true;
+	@OneToMany(mappedBy = "topic")
+	private List<Invitation> invitations;
+	@OneToMany(mappedBy = "topic")
+	private List<Permission> permissions;
 
 	public Topic(){
 		this.titre = "No Title";
@@ -70,4 +75,67 @@ public class Topic {
     public int getId() {
         return id;
     }
+
+	public boolean isPublic() {
+		return isPublic;
+	}
+
+	public void setPublic(boolean aPublic) {
+		isPublic = aPublic;
+	}
+
+	public boolean canRead(Utilisateur user){
+		if (isPublic() || user.getId() == this.getCreateur().getId() || user.isVip()) {
+			return true;
+		}
+		Permission p = user.getPermission(this.id);
+		return p!=null;
+	}
+	public boolean canWrite(Utilisateur user){
+		if (isPublic() || user.getId() == this.getCreateur().getId() || user.isVip()) {
+			return true;
+		}
+		Permission p = user.getPermission(this.id);
+		return p!=null && p.isDroit_ecriture();
+	}
+	public boolean canDeleteTopic(Utilisateur user){
+		return user.getId() == this.getCreateur().getId();
+	}
+	public boolean canDeleteMessage(Utilisateur user, Message m){
+		if (user.getId() == this.getCreateur().getId() || user.getId() == m.getAuteur().getId()  || user.isAdmin()) {
+			return true;
+		}
+		Permission p = user.getPermission(this.id);
+		return p!=null && p.isDroit_suppression();
+	}
+	public boolean canKick(Utilisateur user){
+		if (user.getId() == this.getCreateur().getId() || user.isAdmin()) {
+			return true;
+		}
+		Permission p = user.getPermission(this.id);
+		return p!=null && p.isDroit_exclusion();
+	}
+	public boolean canInvite(Utilisateur user){
+		if (user.getId() == this.getCreateur().getId() || user.isAdmin()) {
+			return true;
+		}
+		Permission p = user.getPermission(this.id);
+		return p!=null && p.isDroit_invitation();
+	}
+
+	public List<Invitation> getInvitations() {
+		return invitations;
+	}
+
+	public void setInvitations(List<Invitation> invitations) {
+		this.invitations = invitations;
+	}
+
+	public List<Permission> getPermissions() {
+		return permissions;
+	}
+
+	public void setPermissions(List<Permission> permissions) {
+		this.permissions = permissions;
+	}
 }
