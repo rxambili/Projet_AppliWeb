@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Devenir VIP</title>
+	</head>
+	
+	<body>
+		<form method="get" action="Restricted">
+		<p><input type="submit" value="Déconnexion"></p>
+		<p><input type="hidden" name="op" value="deconnexion"></p>
+		</form>
+		<form method="get" action="Restricted">
+		<p><input type="submit" value="< page Accueil"></p>
+		<p><input type="hidden" name="op" value="accueil"></p>
+		</form>
+		<form method="get" action="Restricted">
+		<p><input type="submit" value="Mon compte"></p>
+		<p><input type="hidden" name="op" value="moncompte"></p>
+		</form><br>
+		<b>Devenir VIP :</b><br>
+		<form method="post" action="Restricted">
+		<p>Utilisateur : <input type="text" name="utilisateur"></p>
+		<p>Durée de l'abonnement : <input type="text" name="duree"></p>
+		<br>
+		<p>Numéro de carte : <input type = "text" name="nocarte"></p>
+		<p>Titulaire : <input type = "text" name="titulaire"></p>
+		<p>Date d'expiration : <input type = "month" name="expiration"></p>
+		<p>Cryptogramme visuel : <input type = "text" name="crypto"></p>
+		<p><input type="submit" value="Payer"></p>
+		<p><input type="hidden" name="op" value="Vpaiement"></p>
+		</form>
+	</body>
+</html>
