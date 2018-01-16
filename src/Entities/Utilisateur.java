@@ -3,11 +3,7 @@ package Entities;
 import java.util.Calendar;
 import java.util.List;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 
 @Entity
 public class Utilisateur {
@@ -20,8 +16,8 @@ public class Utilisateur {
 	private String pseudo;
 	private String mdp;
 	private boolean isAdmin;
-	private Calendar finVIP;
-	private boolean VIP = finVIP.after(Calendar.getInstance());
+	private Calendar finVIP = null;
+	private boolean VIP ;
 
 
 	@OneToMany(mappedBy="auteur")
@@ -32,6 +28,8 @@ public class Utilisateur {
 	private List<Permission> permissions;
 	@OneToMany(mappedBy="utilisateur")
 	private List<Invitation> invitations;
+	@OneToMany(mappedBy = "acheteur", fetch= FetchType.LAZY)
+	private List<LogPayement> logsPayement;
 
 
 	public Utilisateur(){}
@@ -126,11 +124,11 @@ public class Utilisateur {
 		this.permissions = permissions;
 	}
 
-	public boolean isVip() {
-		return VIP || isAdmin;
+	public boolean isVIP() {
+		return isAdmin || (finVIP != null && finVIP.after(Calendar.getInstance()));
 	}
 
-	public void setVip(boolean vip) {
+	public void setVIP(boolean vip) {
 		this.VIP = vip;
 	}
 
@@ -140,5 +138,13 @@ public class Utilisateur {
 	
 	public void setFinVIP(Calendar d) {
 		this.finVIP = d;
+	}
+
+	public List<LogPayement> getLogsPayement() {
+		return logsPayement;
+	}
+
+	public void setLogsPayement(List<LogPayement> logsPayement) {
+		this.logsPayement = logsPayement;
 	}
 }

@@ -87,4 +87,5 @@ public class Message {
 	public void setContenu(String contenu) {
 		this.contenu = contenu;
 	}
+
 }

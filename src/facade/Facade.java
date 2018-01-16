@@ -76,7 +76,7 @@ public class Facade {
     public List<Topic> ListerTopics(){return em.createQuery("select t from Topic t",
             Topic.class).getResultList();}
     public List<Topic> ListerTopics(Utilisateur user){
-        if (user.isVip()){
+        if (user.isVIP()){
             return ListerTopics();
         }
         return em.createQuery("select distinct t from Topic t, Permission p " +

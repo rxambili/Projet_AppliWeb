@@ -1,22 +1,23 @@
 package Entities;
 import java.util.Calendar;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class LogPayement {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     int id;
-    
+
+    @ManyToOne()
     Utilisateur acheteur;
     Calendar datePayement;
     int dureeValidite;
-    
-	public LogPayement(Utilisateur acheteur, Calendar datePayement, int dureeValidite) {
+
+    public LogPayement() {
+    }
+
+    public LogPayement(Utilisateur acheteur, Calendar datePayement, int dureeValidite) {
 		this.acheteur = acheteur;
 		this.datePayement = datePayement;
 		this.dureeValidite = dureeValidite;

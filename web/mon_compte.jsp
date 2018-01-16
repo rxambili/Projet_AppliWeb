@@ -20,7 +20,7 @@
 		<%
 		Utilisateur p = (Utilisateur) request.getAttribute("sessionUser");
 		String VIP;
-		if (p.isVip()) {
+		if (p.isVIP()) {
 			VIP = "oui";
 		} else {
 			VIP = "non";

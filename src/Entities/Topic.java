@@ -1,7 +1,6 @@
 package Entities;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import javax.persistence.*;
 
@@ -85,14 +84,14 @@ public class Topic {
 	}
 
 	public boolean canRead(Utilisateur user){
-		if (isPublic() || user.getId() == this.getCreateur().getId() || user.isVip()) {
+		if (isPublic() || user.getId() == this.getCreateur().getId() || user.isVIP()) {
 			return true;
 		}
 		Permission p = user.getPermission(this.id);
 		return p!=null;
 	}
 	public boolean canWrite(Utilisateur user){
-		if (isPublic() || user.getId() == this.getCreateur().getId() || user.isVip()) {
+		if (isPublic() || user.getId() == this.getCreateur().getId() || user.isVIP()) {
 			return true;
 		}
 		Permission p = user.getPermission(this.id);
