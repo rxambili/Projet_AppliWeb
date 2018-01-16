@@ -1,16 +1,19 @@
 package facade;
 
-import java.util.Collection;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.ejb.Singleton;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import javax.rmi.CORBA.Util;
 
-import Entities.*;
+import Entities.Invitation;
+import Entities.LogPayement;
+import Entities.Message;
+import Entities.Permission;
+import Entities.Topic;
+import Entities.Utilisateur;
 
 
 @Singleton
@@ -171,5 +174,14 @@ public class Facade {
                 Utilisateur.class)
                 .setParameter("topicId", t.getId())
                 .getResultList();
+    }
+    
+    public void ajoutLogPayement(Utilisateur u, Calendar d, int v) {
+    	LogPayement log = new LogPayement(u, d, v);
+    	em.persist(log);
+    }
+    
+    public void setFinVIP(Utilisateur u, Calendar d) {
+    	u.setFinVIP(d);
     }
 }

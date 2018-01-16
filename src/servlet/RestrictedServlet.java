@@ -1,15 +1,16 @@
 package servlet;
 
-import Entities.Topic;
-import Entities.Utilisateur;
+import java.io.IOException;
+import java.util.Calendar;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
-import java.util.Calendar;
+
+import Entities.Topic;
+import Entities.Utilisateur;
 
 /**
  * Servelet regroupant toutes les actions necessitant d'être connecté.
@@ -76,6 +77,18 @@ public class RestrictedServlet extends Serv{
                         //TODO fail, pas le droit ou le pseudo invité n'existe pas
                     }
                     DisplayTopic(t.getId(), user, request, response);
+                case "devenirVIP":
+                	request.getRequestDispatcher("devenir_VIP.html").forward(request, response);
+                case "Vpaiement":
+                	request.getRequestDispatcher("mon_compte.jsp").forward(request, response);
+                	String nom_u = request.getParameter("utilisateur");
+                	Utilisateur u = f.rechercherUtilisateur(nom_u);
+                    Calendar d = Calendar.getInstance();
+                	int v = Integer.parseInt(request.getParameter("duree"));
+                	f.ajoutLogPayement(u, d, v);
+                	Calendar fin = d;
+                	fin.add(Calendar.DATE, v);
+                	f.setFinVIP(u, fin);
                 default:
                     DisplayErrorPage("Requete non reconnue par Public", "", request, response);
             }

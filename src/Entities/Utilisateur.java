@@ -1,7 +1,13 @@
 package Entities;
 
-import javax.persistence.*;
+import java.util.Calendar;
 import java.util.List;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 @Entity
 public class Utilisateur {
@@ -14,7 +20,8 @@ public class Utilisateur {
 	private String pseudo;
 	private String mdp;
 	private boolean isAdmin;
-	private boolean isVip;
+	private Calendar finVIP;
+	private boolean VIP = finVIP.after(Calendar.getInstance());
 
 
 	@OneToMany(mappedBy="auteur")
@@ -35,7 +42,7 @@ public class Utilisateur {
 		this.pseudo = pseudo;
 		this.mdp = mdp;
 		this.isAdmin = this.pseudo.equals("admin");
-		this.isVip = this.isAdmin;
+		this.VIP = this.isAdmin;
 	}
 
 	public int getId() {
@@ -120,11 +127,18 @@ public class Utilisateur {
 	}
 
 	public boolean isVip() {
-		return isVip || isAdmin;
+		return VIP || isAdmin;
 	}
 
 	public void setVip(boolean vip) {
-		isVip = vip;
+		this.VIP = vip;
 	}
 
+	public Calendar getFinVIP() {
+		return this.finVIP;
+	}
+	
+	public void setFinVIP(Calendar d) {
+		this.finVIP = d;
+	}
 }

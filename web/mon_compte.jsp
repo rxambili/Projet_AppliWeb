@@ -18,10 +18,19 @@
 		<p><input type="hidden" name="op" value="accueil"></p>
 		</form><br>
 		<%
-		Utilisateur p = (Utilisateur) request.getAttribute("sessionUser");%>
-		Mon nom : <i><%= p.getNom() %></i>
-		Mon prénom : <i><%= p.getPrenom() %></i>
-		Mon pseudonyme : <i><%= p.getPseudo() %></i>
-		Mon mot de passe : <i><%= p.getMdp() %></i>
+		Utilisateur p = (Utilisateur) request.getAttribute("sessionUser");
+		String VIP;
+		if (p.isVip()) {
+			VIP = "oui";
+		} else {
+			VIP = "non";
+		}%>
+		Mon nom : <i><%= p.getNom() %></i><br>
+		Mon prénom : <i><%= p.getPrenom() %></i><br>
+		Mon pseudonyme : <i><%= p.getPseudo() %></i><br>
+		Mon mot de passe : <i><%= p.getMdp() %></i><br>
+		VIP ? : <i><%= VIP %></i><br><br>
+		
+		<a href = "Restricted?op=devenirVIP">Devenir VIP</a>
 	</body>
 </html>
