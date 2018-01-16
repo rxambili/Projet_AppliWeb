@@ -17,7 +17,7 @@ public class Permission {
     protected Topic topic;
 
     // True si l'utilisateur a le droit d'écrire sur le topic
-    protected boolean droit_ecriture = false;
+    protected boolean droit_ecriture = true;
     // True si l'utilisateur a le droit de supprimer des messages autres que les siens
     protected boolean droit_suppression = false;
     // True si l'utilisateur a le droit d'inviter d'autre personnes sur le topic
@@ -26,6 +26,13 @@ public class Permission {
     protected boolean droit_exclusion = false;
 
     public Permission() {
+    }
+
+    public Permission(boolean droit_ecriture, boolean droit_suppression, boolean droit_invitation, boolean droit_exclusion) {
+        this.droit_ecriture = droit_ecriture;
+        this.droit_suppression = droit_suppression;
+        this.droit_invitation = droit_invitation;
+        this.droit_exclusion = droit_exclusion;
     }
 
     public int getId() {

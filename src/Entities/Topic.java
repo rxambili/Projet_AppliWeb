@@ -1,5 +1,7 @@
 package Entities;
 
+import facade.Facade;
+
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
@@ -83,42 +85,42 @@ public class Topic {
 		isPublic = aPublic;
 	}
 
-	public boolean canRead(Utilisateur user){
+	public boolean canRead(Utilisateur user, Facade f){
 		if (isPublic() || user.getId() == this.getCreateur().getId() || user.isVIP()) {
 			return true;
 		}
-		Permission p = user.getPermission(this.id);
+		Permission p = f.getPermission(this.id, user.id);
 		return p!=null;
 	}
-	public boolean canWrite(Utilisateur user){
+	public boolean canWrite(Utilisateur user, Facade f){
 		if (isPublic() || user.getId() == this.getCreateur().getId() || user.isVIP()) {
 			return true;
 		}
-		Permission p = user.getPermission(this.id);
+		Permission p = f.getPermission(this.id, user.id);
 		return p!=null && p.isDroit_ecriture();
 	}
 	public boolean canDeleteTopic(Utilisateur user){
 		return user.getId() == this.getCreateur().getId();
 	}
-	public boolean canDeleteMessage(Utilisateur user, Message m){
+	public boolean canDeleteMessage(Utilisateur user, Message m, Facade f){
 		if (user.getId() == this.getCreateur().getId() || user.getId() == m.getAuteur().getId()  || user.isAdmin()) {
 			return true;
 		}
-		Permission p = user.getPermission(this.id);
+		Permission p = f.getPermission(this.id, user.id);
 		return p!=null && p.isDroit_suppression();
 	}
-	public boolean canKick(Utilisateur user){
+	public boolean canKick(Utilisateur user, Facade f){
 		if (user.getId() == this.getCreateur().getId() || user.isAdmin()) {
 			return true;
 		}
-		Permission p = user.getPermission(this.id);
+		Permission p = f.getPermission(this.id, user.id);
 		return p!=null && p.isDroit_exclusion();
 	}
-	public boolean canInvite(Utilisateur user){
+	public boolean canInvite(Utilisateur user, Facade f){
 		if (user.getId() == this.getCreateur().getId() || user.isAdmin()) {
 			return true;
 		}
-		Permission p = user.getPermission(this.id);
+		Permission p = f.getPermission(this.id, user.id);
 		return p!=null && p.isDroit_invitation();
 	}
 

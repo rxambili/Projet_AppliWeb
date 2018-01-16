@@ -111,14 +111,6 @@ public class Utilisateur {
 	public List<Permission> getPermissions() {
 		return permissions;
 	}
-	public Permission getPermission(int topicId) {
-		for(Permission p : this.getPermissions()){
-			if (p.topic.id == topicId){
-				return p;
-			}
-		}
-		return null;
-	}
 
 	public void setPermissions(List<Permission> permissions) {
 		this.permissions = permissions;

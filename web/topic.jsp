@@ -54,15 +54,21 @@
 			<br>
 			Invitation en attentes:<br>
 			<% List<Utilisateur> invitedUsers = (List<Utilisateur>)request.getAttribute("invitedUsers");
+			if (invitedUsers.size() == 0) out.println("Personne");
+			else {
 			for (Utilisateur u : invitedUsers) {%>
 				- <%= u.getPseudo()%> <br>
-			<%}%>
-			<form method="post" action="Restricted">
-				<input type="text" name="invitePseudo" placeholder="pseudo">
+			<%}}%>
+			<form method="post" action="Restricted?op=Vinvite">
+				<input type="text" name="invitePseudo" :placeholder="pseudo">
 				<input type="submit" value="Envoyer une invitation">
 				<input type="hidden" name="topicId" value=<%=t.getId()%>>
 				<input type="hidden" name="op" value="invite">
 			</form>
+			<%String inviteErrorMessage = (String)request.getAttribute("InviteError");
+				if (inviteErrorMessage!=null){%>
+		<p style="color:red"><%=inviteErrorMessage%></p>
+				<%}%>
 		<%}%>
 	</body>
 </html>

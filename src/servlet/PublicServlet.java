@@ -39,11 +39,15 @@ public class PublicServlet extends Serv{
                     String pseudo = request.getParameter("pseudo");
                     String mdp = request.getParameter("mdp");
                     Utilisateur u_cree = f.ajoutUtilisateurAndReturn(nom, prenom, pseudo, mdp);
-                    request.setAttribute("nom", u_cree.getNom());
-                    request.setAttribute("prenom", u_cree.getPrenom());
-                    request.setAttribute("pseudo", u_cree.getPseudo());
-                    request.setAttribute("mdp", u_cree.getMdp());
-                    request.getRequestDispatcher("confirmationInscription.jsp").forward(request, response);
+                    if (u_cree != null) {
+                        request.setAttribute("nom", u_cree.getNom());
+                        request.setAttribute("prenom", u_cree.getPrenom());
+                        request.setAttribute("pseudo", u_cree.getPseudo());
+                        request.setAttribute("mdp", u_cree.getMdp());
+                        request.getRequestDispatcher("confirmationInscription.jsp").forward(request, response);
+                    }else {
+                        DisplayErrorPage("L'utilisateur existe déjà", "Public?op=inscription", request, response);
+                    }
                     break;
                 case "Vconnexion":
                     String pseudo2 = request.getParameter("pseudo");

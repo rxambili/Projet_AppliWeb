@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import Entities.Invitation;
 import Entities.Topic;
 import Entities.Utilisateur;
 
@@ -45,8 +46,7 @@ public class RestrictedServlet extends Serv{
                     DisplayTopicList(user, request, response);
                     break;
                 case "moncompte":
-                    request.setAttribute("sessionUser", user);
-                    request.getRequestDispatcher("mon_compte.jsp").forward(request, response);
+                    DisplayMonCompte(user, request, response);
                     break;
                 case "creationtopic":
                     request.getRequestDispatcher("creation_topic.html").forward(request, response);
@@ -68,18 +68,23 @@ public class RestrictedServlet extends Serv{
                     DisplayTopic(topicId, user, request, response);
                     break;
 
-                case "invite":
-                    Utilisateur inviteUser = f.rechercherUtilisateur(request.getParameter("pseudo"));
+                case "Vinvite":
+                    Utilisateur inviteUser = f.rechercherUtilisateur(request.getParameter("invitePseudo"));
                     Topic t = f.getTopic(Integer.parseInt(request.getParameter("topicId")));
-                    if (t.canInvite(user) && inviteUser!=null) {
-                        f.invite(inviteUser, t);
+                    if (inviteUser == null){
+                        request.setAttribute("InviteError", "Cet utilisateur n'existe pas.");
+                    } else if (t.canInvite(user, f)) {
+                        if(f.invite(inviteUser, t));
+                        else request.setAttribute("InviteError", "Personne deja invitee.");
                     }else{
+                        request.setAttribute("InviteError", "Vous n'avez pas les permissions requises.");
                         //TODO fail, pas le droit ou le pseudo invité n'existe pas
                     }
                     DisplayTopic(t.getId(), user, request, response);
                 case "devenirVIP":
                 	request.getRequestDispatcher("devenir_VIP.html").forward(request, response);
-                case "Vpaiement":
+                    break;
+               	case "Vpaiement":
                 	request.getRequestDispatcher("mon_compte.jsp").forward(request, response);
                 	String nom_u = request.getParameter("utilisateur");
                 	Utilisateur u = f.rechercherUtilisateur(nom_u);
@@ -89,6 +94,31 @@ public class RestrictedServlet extends Serv{
                 	Calendar fin = d;
                 	fin.add(Calendar.DATE, v);
                 	f.setFinVIP(u, fin);
+                    DisplayMonCompte(user, request, response);
+                    break;
+                case "Vdelete_permission":
+                    int perm_topic = Integer.parseInt(request.getParameter("perm_topic"));
+                    int perm_user = Integer.parseInt(request.getParameter("perm_user"));
+                    // verifier que l'utilisateur a les droits
+                    if (user.isAdmin() || user.getId() == perm_user || f.getTopic(perm_topic).canInvite(f.rechercherUtilisateur(perm_user),f)) {
+                        f.supprimerPermission(perm_topic, perm_user);
+                        f.supprimerInvitation(perm_topic, perm_user);
+                        DisplayMonCompte(user, request, response);
+                    }else{
+                        DisplayErrorPage("Vous n'avez pas les droit pour cela.", "Public?op=bienvenue", request, response);
+                    }
+                    break;
+                case "Vaccepter_invitation":
+
+                    int perm_topic2 = Integer.parseInt(request.getParameter("perm_topic"));
+                    int perm_user2 = Integer.parseInt(request.getParameter("perm_user"));
+                    if (user.isAdmin() || user.getId() == perm_user2) {
+                        f.validerInvite(perm_topic2, perm_user2);
+                        DisplayMonCompte(user, request, response);
+                    }else{
+                        DisplayErrorPage("Vous n'avez pas les droit pour cela.", "Public?op=bienvenue", request, response);
+                    }
+                    break;
                 default:
                     DisplayErrorPage("Requete non reconnue par Public", "", request, response);
             }
@@ -96,5 +126,12 @@ public class RestrictedServlet extends Serv{
             DisplayTopicList(user, request,response);
         }
 
+    }
+
+    public void DisplayMonCompte(Utilisateur user, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setAttribute("sessionUser", user);
+        request.setAttribute("permitedTopics", f.getPermitedTopics(user));
+        request.setAttribute("invitedTopics", f.getInvitedTopics(user));
+        request.getRequestDispatcher("mon_compte.jsp").forward(request, response);
     }
 }

@@ -7,6 +7,7 @@ import javax.ejb.Singleton;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import javax.rmi.CORBA.Util;
 
 import Entities.Invitation;
 import Entities.LogPayement;
@@ -27,10 +28,15 @@ public class Facade {
         //this.em.persist(defautAdmin);
     }
 
-    public void ajoutUtilisateur(String nom, String prenom, String pseudo, String mdp) {
-        ajoutUtilisateurAndReturn(nom, prenom, pseudo, mdp);
+    public boolean ajoutUtilisateur(String nom, String prenom, String pseudo, String mdp) {
+        return ajoutUtilisateurAndReturn(nom, prenom, pseudo, mdp) != null;
     }
     public Utilisateur ajoutUtilisateurAndReturn(String nom, String prenom, String pseudo, String mdp) {
+        // Vérifier que l'utilisateur n'existe pas
+        if (rechercherUtilisateur(pseudo) != null) {
+            return null;
+        }
+
         Utilisateur u = new Utilisateur(nom, prenom, pseudo, mdp);
         this.em.persist(u);
         return u;
@@ -146,36 +152,129 @@ public class Facade {
                 .setParameter("num", numero);
     }
 
-    public void invite(Utilisateur inviteUser, Topic t) {
-        // Vérifier que la personne n'a pas déjà été invitée
-        for (Permission p : t.getPermissions()){
-            if (p.getUtilisateur().getId() == inviteUser.getId()) return;
-        }
-        for (Invitation i : t.getInvitations()){
-            if (i.getUtilisateur().getId() == inviteUser.getId()) return;
-        }
-        Invitation i = new Invitation(t, inviteUser);
-        this.em.persist(i);
-        i.setTopic(t);
-
+    public boolean doInvitPermExist(Utilisateur inviteUser, Topic t){
+        return em.createQuery("select p from Permission p " +
+                        "where (p.topic.id = :topicId and p.utilisateur.id = :userId)",
+                Permission.class)
+                .setParameter("userId", inviteUser.getId())
+                .setParameter("topicId", t.getId())
+                .getResultList()
+                .size() > 0
+                ||
+                em.createQuery("select i from Invitation i " +
+                                "where (i.topic.id = :topicId and i.utilisateur.id = :userId)",
+                        Invitation.class)
+                .setParameter("userId", inviteUser.getId())
+                .setParameter("topicId", t.getId())
+                .getResultList()
+                .size() > 0
+                ;
     }
 
-    public List<Utilisateur> getInvitations(Topic t) {
+    public boolean invite(Utilisateur inviteUser, Topic t) {
+        // Vérifier que la personne n'a pas déjà été invitée
+        if (doInvitPermExist(inviteUser, t)) return false;
+        Invitation i = new Invitation(t, inviteUser);
+        i.setTopic(t);
+        this.em.persist(i);
+        return true;
+    }
+    public boolean validerInvite(int perm_topic, int perm_user){
+        Invitation i = getInvitation(perm_topic, perm_user);
+        if (i==null) return false;
+        Permission p = new Permission(i.isDroit_ecriture(), i.isDroit_suppression(), i.isDroit_invitation(), i.isDroit_exclusion());
+        p.setTopic(getTopic(perm_topic));
+        p.setUtilisateur(rechercherUtilisateur(perm_user));
+        em.persist(p);
+        supprimerInvitation(perm_topic, perm_user);
+        return true;
+    }
+
+    public Invitation getInvitation(int topicId, int userId) {
+        List<Invitation> i = em.createQuery("select i from Invitation i " +
+                        "where i.utilisateur.id = :userId and i.topic.id = :topicId",
+                Invitation.class)
+                .setParameter("topicId", topicId)
+                .setParameter("userId", userId)
+                .getResultList();
+        if (i.size()==0){
+            return null;
+        }else{
+            return i.get(0);
+        }
+    }
+    public void supprimerInvitation(int topicId, int userId){
+        em.createNativeQuery("DELETE i from Invitation i " +
+                "where i.utilisateur.id = :userId and i.topic.id = :topicId")
+                .setParameter("topicId", topicId)
+                .setParameter("userId", userId);
+    }
+
+    public List<Utilisateur> getInvitedUser(Topic t) {
         return em.createQuery("select distinct u from Utilisateur u, Topic t, Invitation i " +
                         "where i.utilisateur.id = u.id and i.topic.id = t.id and t.id = :topicId",
                 Utilisateur.class)
                 .setParameter("topicId", t.getId())
                 .getResultList();
     }
+    public List<Invitation> getInvitation(Utilisateur u) {
+        return em.createQuery("select distinct i from Invitation i " +
+                        "where i.utilisateur.id = :userId",
+                Invitation.class)
+                .setParameter("userId", u.getId())
+                .getResultList();
+    }
+    public List<Topic> getInvitedTopics(Utilisateur u) {
+        return em.createQuery("select distinct i.topic from Invitation i " +
+                        "where i.utilisateur.id = :userId",
+                Topic.class)
+                .setParameter("userId", u.getId())
+                .getResultList();
+    }
 
-    public List<Utilisateur> getPermissions(Topic t) {
+    public Permission getPermission(int topicId, int userId) {
+        List<Permission> p = em.createQuery("select distinct p from Permission p " +
+                        "where p.utilisateur.id = :userId and p.topic.id = :topicId",
+                Permission.class)
+                .setParameter("topicId", topicId)
+                .setParameter("userId", userId)
+                .setMaxResults(1)
+                .getResultList();
+        if (p==null || p.size()==0){
+            return null;
+        }else{
+            return p.get(0);
+        }
+    }
+    public void supprimerPermission(int topicId, int userId){
+        em.createNativeQuery("DELETE p from Permission p " +
+                "where p.utilisateur.id = :userId and p.topic.id = :topicId")
+                .setParameter("topicId", topicId)
+                .setParameter("userId", userId);
+    }
+    public List<Utilisateur> getPermtedUsers(Topic t) {
         return em.createQuery("select distinct u from Utilisateur u, Topic t, Permission p " +
                         "where p.utilisateur.id = u.id and p.topic.id = t.id and t.id = :topicId",
                 Utilisateur.class)
                 .setParameter("topicId", t.getId())
                 .getResultList();
     }
-    
+    public List<Utilisateur> getPermitions(Utilisateur u) {
+        return em.createQuery("select distinct p from Permission p " +
+                        "where p.utilisateur.id = :userId",
+                Utilisateur.class)
+                .setParameter("userId", u.getId())
+                .getResultList();
+    }
+    public List<Topic> getPermitedTopics(Utilisateur u) {
+        return em.createQuery("select distinct p.topic from Permission p " +
+                        "where p.utilisateur.id = :userId",
+                Topic.class)
+                .setParameter("userId", u.getId())
+                .getResultList();
+    }
+
+
     public void ajoutLogPayement(Utilisateur u, Calendar d, int v) {
     	LogPayement log = new LogPayement(u, d, v);
     	em.persist(log);

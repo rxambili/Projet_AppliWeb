@@ -1,16 +1,11 @@
 package servlet;
 
 
-import Entities.Invitation;
-import Entities.Permission;
 import Entities.Topic;
 import Entities.Utilisateur;
 import facade.Facade;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -19,7 +14,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
  * Servlet implementation class Serv
@@ -68,12 +62,12 @@ public class Serv extends HttpServlet {
             request.setAttribute("ListeTopics", f.ListerTopics());
             request.getRequestDispatcher("accueil.jsp").forward(request, response);
         }else {
-            request.setAttribute("canInvite", t.canInvite(user));
+            request.setAttribute("canInvite", t.canInvite(user,f));
             request.setAttribute("topic", t);
-            if (t.canInvite(user)) {
+            if (t.canInvite(user,f)) {
                 // Get les permission qui son lazy!
-                List<Utilisateur> invitedUsers = f.getInvitations(t);
-                List<Utilisateur> permittedUsers = f.getPermissions(t);
+                List<Utilisateur> invitedUsers = f.getInvitedUser(t);
+                List<Utilisateur> permittedUsers = f.getPermtedUsers(t);
                 request.setAttribute("invitedUsers", invitedUsers);
                 request.setAttribute("permittedUsers" , permittedUsers);
                 request.getRequestDispatcher("topic.jsp").forward(request, response);
