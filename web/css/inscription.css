@@ -70,14 +70,15 @@ h1, input {
   color: white;
   background-color: #f14444;
   border: none;
-  -webkit-box-shadow: 0 5px 0 #f14444;
-  -moz-box-shadow: 0 5px 0 #f14444;
+  -webkit-box-shadow: 0 5px 0 #2d0d0d;
+  -moz-box-shadow: 0 5px 0 #2d0d0d;
   box-shadow: 0 5px 0 #f14444;
 }
 .inputButton:hover {
   top: 2px;
-  -webkit-box-shadow: 0 3px 0 #f14444;
-  -moz-box-shadow: 0 3px 0 #f14444;
+  background-color: #c43636;
+  -webkit-box-shadow: 0 3px 0 #2d0d0d;
+  -moz-box-shadow: 0 3px 0 #2d0d0d;
   box-shadow: 0 3px 0 #f14444;
 }
 .inputButton:active {

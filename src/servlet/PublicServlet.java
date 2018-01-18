@@ -64,7 +64,7 @@ public class PublicServlet extends Serv{
                         // connexion OK
                         HttpSession session = request.getSession();
                         session.setAttribute("sessionUserID", u.getId());
-                        session.setAttribute("pseudo", u.getPseudo());
+                        session.setAttribute("user", u);
                         session.setAttribute("isAdmin", u.isAdmin()?true:null);
                         session.setMaxInactiveInterval(30 * 60);
                         DisplayTopicList(u, request, response);

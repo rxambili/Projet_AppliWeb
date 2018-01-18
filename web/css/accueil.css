@@ -1,0 +1,48 @@
+body {
+  padding-top: 54px;
+}
+
+#topicbox {
+  padding: 10px;
+  margin: 30px 10px;
+  background-color: #fff;
+  -webkit-box-shadow: 0 1px 5px rgba(0, 0, 0, 0.25);
+  -moz-box-shadow: 0 1px 5px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.25);
+}
+
+#topicbox img{
+	margin: 5px auto;
+	max-height : 100%;
+	max-width : 100%;
+}
+
+#topicbox h1{
+	color : #313538;
+}
+
+#topicbox h2{
+	color : #586066;
+}
+
+#topicbox .btn-primary {
+	background-color: #f14444; 
+	border-color: #c43636;
+	margin-right: 10px}
+#topicbox .btn-primary:hover {
+    background-color: #c43636; }
+#topicbox .btn-primary:active {
+    background-color: #c43636; }
+
+
+.row.vdivide [class*='col-']:not(:last-child):after {
+  background: #e0e0e0;
+  width: 1px;
+  content: "";
+  display:block;
+  position: absolute;
+  top:0;
+  bottom: 0;
+  right: 0;
+  min-height: 70px;
+}

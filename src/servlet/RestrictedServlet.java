@@ -27,7 +27,7 @@ public class RestrictedServlet extends Serv{
         HttpSession session = request.getSession();
         String op = request.getParameter("op");
         int topicId;
-        int userID=(int)session.getAttribute("sessionUserID");
+        int userID=(int) session.getAttribute("sessionUserID");
         Utilisateur user = f.rechercherUtilisateur(userID);
         if(op!=null) {
             switch (op) {
@@ -36,6 +36,7 @@ public class RestrictedServlet extends Serv{
                     break;
                 case "deconnexion":
                     session.setAttribute("sessionUserID", null);
+                    session.setAttribute("user", null);
                     session.setAttribute("admin", null);
                     request.getRequestDispatcher("bienvenue.html").forward(request, response);
                     break;
