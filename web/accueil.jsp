@@ -46,13 +46,6 @@
     <div class="container">
         <div id="newtopic" class="row">
             <div class="col-md-3">
-            <form id="signup" method="post" action="Restricted">
-                <h1></h1>
-                <input type="submit" value="Nouveau topic" class="inputButton"/>
-                <input type="hidden" name="op" value="creationtopic">
-            </form>
-            </div>
-            <div class="col-md-3">
             <%if (isAdmin) {%>
             <form id="signup" method="post" action="Admin">
                 <h1></h1>
