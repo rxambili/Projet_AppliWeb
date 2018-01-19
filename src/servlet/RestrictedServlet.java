@@ -95,7 +95,6 @@ public class RestrictedServlet extends Serv{
                 	request.getRequestDispatcher("devenir_VIP.html").forward(request, response);
                     break;
                	case "Vpaiement":
-                	request.getRequestDispatcher("mon_compte.jsp").forward(request, response);
                 	String nom_u = request.getParameter("utilisateur");
                 	Utilisateur u = f.rechercherUtilisateur(nom_u);
                     Calendar d = Calendar.getInstance();

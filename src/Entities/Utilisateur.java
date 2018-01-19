@@ -117,7 +117,7 @@ public class Utilisateur {
 	}
 
 	public boolean isVIP() {
-		return isAdmin || (finVIP != null && finVIP.after(Calendar.getInstance()));
+		return isAdmin || (finVIP != null); // && finVIP.after(Calendar.getInstance()));
 	}
 
 	public void setVIP(boolean vip) {
@@ -130,6 +130,7 @@ public class Utilisateur {
 	
 	public void setFinVIP(Calendar d) {
 		this.finVIP = d;
+		this.setVIP(true);
 	}
 
 	public List<LogPayement> getLogsPayement() {

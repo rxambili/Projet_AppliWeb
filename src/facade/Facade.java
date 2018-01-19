@@ -289,6 +289,7 @@ public class Facade {
     
     public void setFinVIP(Utilisateur u, Calendar d) {
     	u.setFinVIP(d);
+    	u.setVIP(u.isVIP());
     }
 
     public List<Label> listerLabels(){
