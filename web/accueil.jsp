@@ -8,8 +8,10 @@
 
 	<%List<Topic> topics = (List<Topic>) request.getAttribute("ListeTopics");
 	Utilisateur user = (Utilisateur) session.getAttribute("user");
-    List<Collection<Label>> topicsLabels = (List<Collection<Label>>) request.getAttribute("topicsLabels");%>
-  <head>
+    List<Collection<Label>> topicsLabels = (List<Collection<Label>>) request.getAttribute("topicsLabels");
+    boolean isAdmin = (boolean)request.getAttribute("isAdmin");
+    %>
+    <head>
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -43,11 +45,22 @@
     <!-- Page Content -->
     <div class="container">
         <div id="newtopic" class="row">
+            <div class="col-md-3">
             <form id="signup" method="post" action="Restricted">
                 <h1></h1>
                 <input type="submit" value="Nouveau topic" class="inputButton"/>
                 <input type="hidden" name="op" value="creationtopic">
             </form>
+            </div>
+            <div class="col-md-3">
+            <%if (isAdmin) {%>
+            <form id="signup" method="post" action="Admin">
+                <h1></h1>
+                <input type="submit" value="Administrer les Labels" class="inputButton"/>
+                <input type="hidden" name="op" value="creationlabel">
+            </form>
+            <%}%>
+            </div>
         </div>
     </div>
     <div class="container">
@@ -87,6 +100,7 @@
       <!-- /.row -->
 
     </div>
+
     <!-- /.container -->
 	
 	<div id="bouttonCreation" class="fixed-bottom">

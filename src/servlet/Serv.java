@@ -57,6 +57,7 @@ public class Serv extends HttpServlet {
         for (Topic t3 : topics2){
             topicsLabels.add(f.listerLabel(t3));
         }
+        request.setAttribute("isAdmin", user.isAdmin());
         request.setAttribute("topicsLabels", topicsLabels);
         request.setAttribute("ListeTopics", topics2);
         request.getRequestDispatcher("accueil.jsp").forward(request, response);
