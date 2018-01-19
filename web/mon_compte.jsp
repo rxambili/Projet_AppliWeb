@@ -4,28 +4,42 @@
 <%@ page import="java.util.List" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title>Mon compte</title>
-	</head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Mon Compte</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 	
-	<body>
-		<form method="get" action="Restricted">
-		<p><input type="submit" value="Déconnexion"></p>
-		<p><input type="hidden" name="op" value="deconnexion"></p>
-		</form>
-		<form method="get" action="Restricted">
-		<p><input type="submit" value="< page Accueil"></p>
-		<p><input type="hidden" name="op" value="accueil"></p>
-		</form><br>
-		<%
-		Utilisateur p = (Utilisateur) request.getAttribute("sessionUser");
-		String VIP;
-		if (p.isVIP()) {
-			VIP = "oui";
-		} else {
-			VIP = "non";
-		}%>
+	<!-- Custom fonts for this template -->
+    <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="vendor/simple-line-icons/css/simple-line-icons.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
+
+    <!-- Custom styles for this template -->
+    <link href="css/accueil.css" rel="stylesheet">
+	
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+
+  </head>
+
+   <body ng-app>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-fixed-top topnav" role="navigation">
+        <div ng-include="'modules/top_navbar.jsp'"></div>
+    </nav>
+	<%
+	Utilisateur p = (Utilisateur) request.getAttribute("sessionUser");
+	String VIP;
+	if (p.isVIP()) {
+		VIP = "oui";
+	} else {
+		VIP = "non";
+	}%>
 		Mon nom : <i><%= p.getNom() %></i><br>
 		Mon prénom : <i><%= p.getPrenom() %></i><br>
 		Mon pseudonyme : <i><%= p.getPseudo() %></i><br>
@@ -67,5 +81,13 @@
 			<input type="hidden" name="perm_user" value=<%=p.getId()%>>
 		</form>
 		<%}}%>
-	</body>
+	<!-- Footer -->
+    <div ng-include="'modules/footer.html'"></div>
+    
+    <!-- Bootstrap core JavaScript -->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  </body>
+
 </html>

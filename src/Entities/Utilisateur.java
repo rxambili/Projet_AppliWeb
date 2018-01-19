@@ -26,7 +26,7 @@ public class Utilisateur {
     private List<Topic> topics;
 	@OneToMany(mappedBy="utilisateur")
 	private List<Permission> permissions;
-	@OneToMany(mappedBy="utilisateur")
+	@OneToMany(mappedBy="utilisateur", fetch= FetchType.EAGER)
 	private List<Invitation> invitations;
 	@OneToMany(mappedBy = "acheteur", fetch= FetchType.LAZY)
 	private List<LogPayement> logsPayement;

@@ -23,13 +23,16 @@
 		</form>
 		<ul class="nav navbar-right">
 			<li class="dropdown">
-				<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-fw fa-bell-o"></i> Notifications <span class="badge" style="color:#fff">0</span></a>
+				<%List<Invitation> invitations = u.getInvitations();%>
+				<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-fw fa-bell-o"></i> Notifications <span class="badge" style="color:#fff"><%=invitations.size()%></span></a>
 				<ul class="dropdown-menu" role="menu">
-					<li><a href="#"><i class="fa fa-fw fa-tag"></i> <span class="badge">Music</span> sayfası <span class="badge">Video</span> sayfasında etiketlendi</a></li>
-					<li><a href="#"><i class="fa fa-fw fa-thumbs-o-up"></i> <span class="badge">Music</span> sayfasında iletiniz beğenildi</a></li>
-					<li><a href="#"><i class="fa fa-fw fa-thumbs-o-up"></i> <span class="badge">Video</span> sayfasında iletiniz beğenildi</a></li>
-					<li><a href="#"><i class="fa fa-fw fa-thumbs-o-up"></i> <span class="badge">Game</span> sayfasında iletiniz beğenildi</a></li>
+					<%if (invitations.size() != 0) {
+						for (Invitation i: invitations) {%>
+					<li><a href="Restricted?op=Vaccepter_invitation&perm_topic=<%= i.getTopic().getId()%>&perm_user=<%=u.getId()%>"><i class="fa fa-fw fa-tag"></i> <span class="badge">Invitation</span> <%= i.getTopic().getTitre()%> </a></li>
+						<% }
+					}%>
 				</ul>
+				
 			</li>
 			<li class="dropdown">
 				<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><%=u.getPseudo()%> <span class="caret"></span></a>
