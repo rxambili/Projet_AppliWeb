@@ -9,4 +9,6 @@ public class Achivement {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     int id;
+
+    // Pas encore Implémenté
 }

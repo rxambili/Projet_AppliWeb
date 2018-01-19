@@ -2,6 +2,7 @@ package servlet;
 
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -10,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import Entities.Invitation;
+import Entities.Label;
 import Entities.Topic;
 import Entities.Utilisateur;
 
@@ -41,9 +43,16 @@ public class RestrictedServlet extends Serv{
                     request.getRequestDispatcher("bienvenue.html").forward(request, response);
                     break;
                 case "Vcreationtopic":
+                    String[] labels = request.getParameter("labels").split(",");
                     String titre = request.getParameter("titre");
                     boolean isPublic = request.getParameter("isPublic").equals("true");
-                    f.ajoutTopic(titre, user, isPublic);
+                    Topic t2 = f.ajoutTopic(titre, user, isPublic);
+                    for (String labelName : labels){
+                        Label l = f.getLabel(labelName);
+                        if (l!=null) {
+                            f.lierLabel(l.getId(), t2.getId());
+                        }
+                    }
                     DisplayTopicList(user, request, response);
                     break;
                 case "moncompte":

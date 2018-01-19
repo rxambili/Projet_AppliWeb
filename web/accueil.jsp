@@ -6,8 +6,8 @@
 <!DOCTYPE html>
 <html lang="en">
 	<%List<Topic> topics = (List<Topic>) request.getAttribute("ListeTopics");
-	Utilisateur user = (Utilisateur) session.getAttribute("user");%>
-
+	Utilisateur user = (Utilisateur) session.getAttribute("user");
+    List<Collection<Label>> topicsLabels = (List<Collection<Label>>) request.getAttribute("topicsLabels");%>
   <head>
 
     <meta charset="utf-8">
@@ -46,9 +46,18 @@
 
     <!-- Page Content -->
     <div class="container">
-		
+        <div id="newtopic" class="row">
+            <form id="signup" method="post" action="Restricted">
+                <h1></h1>
+                <input type="submit" value="Nouveau topic" class="inputButton"/>
+                <input type="hidden" name="op" value="creationtopic">
+            </form>
+        </div>
+    </div>
+    <div class="container">
 	<%
 	if (topics != null) {
+	    int i = 0;
 	for (Topic t : topics) {%>
       <div id="topicbox" class="row vdivide">
 		
@@ -60,8 +69,11 @@
 		<!-- topic -->
         <div class="col-md-8">
 			<h1><%= t.getTitre()%></h1>
+            <h2>Labels: <%for (Label l : topicsLabels.get(i)){%>
+               <%=l.getText()+", "%>
+            <%}%></h2>
 			<hr/>
-            <h2><% if(t.getNbMessages() > 0) {%> <%= t.getMessages().get(0).getContenu()%> <%}%></h2>
+            <h3><% if(t.getNbMessages() > 0) {%> <%= t.getMessages().get(0).getContenu()%> <%}%></h3>
             <a href="Restricted?op=afficherTopic&topicId=<%= t.getId() %>" class="btn btn-primary">Rejoindre! &rarr;</a>
         </div>
 		
@@ -146,7 +158,8 @@
         </div> -->
 
       </div>
-	  <%}
+	  <%i++;
+	    }
 		}%>
       <!-- /.row -->
 

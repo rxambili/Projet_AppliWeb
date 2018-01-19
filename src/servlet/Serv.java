@@ -1,11 +1,14 @@
 package servlet;
 
 
+import Entities.Label;
 import Entities.Topic;
 import Entities.Utilisateur;
 import facade.Facade;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -49,7 +52,13 @@ public class Serv extends HttpServlet {
     protected void DisplayTopicList(Utilisateur user, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         /** envoi la page accueil.jsp
          */
-        request.setAttribute("ListeTopics", f.ListerTopics(user));
+        List<Topic> topics2 = f.ListerTopics(user);
+        List<Collection<Label>> topicsLabels = new ArrayList<>();
+        for (Topic t3 : topics2){
+            topicsLabels.add(f.listerLabel(t3));
+        }
+        request.setAttribute("topicsLabels", topicsLabels);
+        request.setAttribute("ListeTopics", topics2);
         request.getRequestDispatcher("accueil.jsp").forward(request, response);
     }
     protected void DisplayTopic(int topicId, Utilisateur user, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
