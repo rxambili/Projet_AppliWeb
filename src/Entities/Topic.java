@@ -24,6 +24,9 @@ public class Topic {
 	@OneToMany(mappedBy = "topic")
 	private List<Permission> permissions;
 
+	@ManyToMany
+	private List<Label> labels;
+
 	public Topic(){
 		this.titre = "No Title";
 		this.createur = null;
@@ -138,5 +141,13 @@ public class Topic {
 
 	public void setPermissions(List<Permission> permissions) {
 		this.permissions = permissions;
+	}
+
+	public List<Label> getLabels() {
+		return labels;
+	}
+
+	public void setLabels(List<Label> labels) {
+		this.labels = labels;
 	}
 }

@@ -9,4 +9,6 @@ public class FichierAdditionnel {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     int id;
+
+    // Pas encore Implémenté
 }

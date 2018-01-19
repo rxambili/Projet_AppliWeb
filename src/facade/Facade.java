@@ -1,20 +1,15 @@
 package facade;
 
-import java.util.Calendar;
-import java.util.List;
+import java.util.*;
 
 import javax.ejb.Singleton;
+import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.rmi.CORBA.Util;
 
-import Entities.Invitation;
-import Entities.LogPayement;
-import Entities.Message;
-import Entities.Permission;
-import Entities.Topic;
-import Entities.Utilisateur;
+import Entities.*;
 
 
 @Singleton
@@ -102,23 +97,32 @@ public class Facade {
         }
         return null;
     }
-    public void ajoutTopic(String titre){
-        ajoutTopic(titre, null);
+    public Topic getTopic(String titre){
+        TypedQuery<Topic> req = em.createQuery("select t from Topic t where t.titre = :identifier",
+                Topic.class).setParameter("identifier", titre).setMaxResults(1);
+        List<Topic> results = req.getResultList();
+        if (results.size() > 0) {
+            return results.get(0);
+        }
+        return null;
     }
-    public void ajoutTopic(String titre, Utilisateur proprietaire){
-        ajoutTopic(titre, proprietaire, true);
+
+    public Topic ajoutTopic(String titre){
+        return ajoutTopic(titre, null);
     }
-    public void ajoutTopic(String titre, Utilisateur proprietaire, boolean isPublic){
+    public Topic ajoutTopic(String titre, Utilisateur proprietaire){
+        return ajoutTopic(titre, proprietaire, true);
+    }
+    public Topic ajoutTopic(String titre, Utilisateur proprietaire, boolean isPublic){
         Topic t = new Topic(titre, proprietaire);
         t.setPublic(isPublic);
         em.persist(t);
 
-        Permission p = new Permission();
+        Permission p = new Permission(true, true, true, true);
         em.persist(p);
         p.setTopic(t);
         p.setUtilisateur(proprietaire);
-        p.setDroit_invitation(true);
-        //... TODO
+        return t;
     }
 
     public void supprimerTopic(int identifer){
@@ -204,10 +208,13 @@ public class Facade {
         }
     }
     public void supprimerInvitation(int topicId, int userId){
-        em.createNativeQuery("DELETE i from Invitation i " +
+        /*TODO bug
+        em.createNativeQuery("DELETE Invitation i " +
                 "where i.utilisateur.id = :userId and i.topic.id = :topicId")
                 .setParameter("topicId", topicId)
-                .setParameter("userId", userId);
+                .setParameter("userId", userId)
+        .executeUpdate();
+        em.flush();*/
     }
 
     public List<Utilisateur> getInvitedUser(Topic t) {
@@ -283,4 +290,58 @@ public class Facade {
     public void setFinVIP(Utilisateur u, Calendar d) {
     	u.setFinVIP(d);
     }
+
+    public List<Label> listerLabels(){
+        return em.createQuery("select l from Label l", Label.class).getResultList();
+    }
+    public Collection<Label> listerLabel(Topic t){
+        List<Collection> ll = (em.createQuery("select t.labels from Topic t " +
+                "where (t.id = :topicId)", Collection.class)
+                .setParameter("topicId", t.getId())
+                .getResultList());
+        if (ll.size() == 0){
+            return new LinkedList<Label>();
+        }else{
+            return ll.get(0);
+        }
+    }
+    public Label getLabel(String texte){
+        List<Label> p = em.createQuery("select distinct l from Label l" +
+                        " where l.text = :labelId",
+                Label.class)
+                .setParameter("labelId", texte)
+                .setMaxResults(1)
+                .getResultList();
+        if (p==null || p.size()==0){
+            return null;
+        }else{
+            return p.get(0);
+        }
+    }
+    public Label getLabel(int labelId){
+        List<Label> p = em.createQuery("select distinct l from Label l" +
+                        " where l.id = :labelId",
+                Label.class)
+                .setParameter("labelId", labelId)
+                .setMaxResults(1)
+                .getResultList();
+        if (p==null || p.size()==0){
+            return null;
+        }else{
+            return p.get(0);
+        }
+    }
+    public void ajouterLabel(String name, String html_color){
+        Label l = new Label(name, html_color);
+        em.persist(l);
+    }
+    public void lierLabel(int labelId, int topicId){
+        Label l = getLabel(labelId);
+        Topic t = getTopic(topicId);
+        if (l==null || t==null){
+            return;
+        }
+        l.getTopics().add(t);
+    }
+
 }

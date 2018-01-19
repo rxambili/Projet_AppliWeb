@@ -89,7 +89,7 @@
 				- <%= u.getPseudo()%> <br>
 			<%}}%>
 			<form method="post" action="Restricted?op=Vinvite">
-				<input type="text" name="invitePseudo" :placeholder="pseudo">
+				<input type="text" name="invitePseudo" placeholder="pseudo">
 				<input type="submit" value="Envoyer une invitation">
 				<input type="hidden" name="topicId" value=<%=t.getId()%>>
 				<input type="hidden" name="op" value="invite">
