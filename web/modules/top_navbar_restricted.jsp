@@ -18,9 +18,9 @@
 		<div class="navbar-header">
 			<a class="navbar-brand" href="Restricted?op=accueil">Forum7</a>
 		</div>
-		<!-- <form class="navbar-form navbar-right search-form" role="search">
+		<form class="navbar-form navbar-right search-form" role="search">
 				<input type="text" class="form-control" placeholder="Recherche..." />
-		</form> -->
+		</form>
 		<ul class="nav navbar-right">
 			<li class="dropdown">
 				<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-fw fa-bell-o"></i> Notifications <span class="badge" style="color:#fff">0</span></a>
@@ -34,10 +34,10 @@
 			<li class="dropdown">
 				<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><%=u.getPseudo()%> <span class="caret"></span></a>
 				<ul class="dropdown-menu" role="menu">
-					<li><a href="#">Mon Compte</a></li>
-					<li><a href="#">Devenir VIP</a></li>
+					<li><a href="Restricted?op=moncompte">Mon Compte</a></li>
+					<li><a href="Restricted?op=devenirVIP">Devenir VIP</a></li>
 					<li class="divider"></li>
-					<li><a href="#exit">Déconnexion</a></li>
+					<li><a href="Restricted?op=deconnexion">Déconnexion</a></li>
 				</ul>
 			</li>
 		</ul>

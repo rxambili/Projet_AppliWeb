@@ -44,6 +44,7 @@ public class Message {
 
 	public void setTopic(Topic topic) {
 		this.topic = topic;
+		this.numero= topic.getNbMessages();
 	}
 
 	public int getNumero() {
